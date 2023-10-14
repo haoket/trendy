@@ -10,14 +10,14 @@ const ProductsTable = () => {
         const data = await getProducts();
         setData(data);
     };
-    
+
     useEffect(() => {
         fetchProducts();
     }, []);
 
     const handleDelete = (id) => {
         deleteProduct(id);
-        fetchProducts()
+        fetchProducts();
     };
 
     const handleUpdate = (id) => {

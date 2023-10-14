@@ -11,7 +11,9 @@ const ProductForm = () => {
         Description: yup.string().required("Description is required"),
         Price: yup.string().required("Price is required"),
         Category: yup.string().required("Category is required"),
-        // ImageLink: yup.string().url("Invalid URL format").required("Image URL is required"),
+        Stars: yup.string().required("Price is required"),
+        Quantity: yup.string().required("Quantity is required"),
+
     });
 
     const [categories, setCategories] = useState([]); // State to store categories
@@ -38,13 +40,28 @@ const ProductForm = () => {
         }
     };
 
-    const onSubmit = (data) => {
+    const onSubmit = async (data) => {
         console.log(data);
-        createProduct(data);
+        const formData = new FormData();
+        formData.append("Name", data.Name);
+        formData.append("Description", data.Description);
+        formData.append("Price", data.Price);
+        formData.append("Category", data.Category);
+        formData.append("Stars", data.Stars);
+        formData.append("Quantity", data.Quantity);
+        formData.append("ImageLink", data.ImageLink); // Lấy tệp hình ảnh đầu tiên từ input file
+
+
+        console.log('====================================');
+        console.log(formData);
+        console.log('====================================');
+        // Gọi hàm createProduct với FormData
+        await createProduct(formData);
+        // createProduct(data);
     };
 
     return (
-        <form className="max-w-sm m-6" onSubmit={handleSubmit(onSubmit)}>
+        <form className="max-w-sm m-6" onSubmit={handleSubmit(onSubmit)} enctype="multipart/form-data">
             <div className="mb-4">
                 <label
                     className="block text-gray-700 text-sm font-bold mb-2"
@@ -96,6 +113,22 @@ const ProductForm = () => {
                     {...register("Price")}
                 />
             </div>
+            <div className="mb-4">
+                <label
+                    className="block text-gray-700 text-sm font-bold mb-2"
+                    htmlFor="quantity"
+                >
+                    Quantity
+                </label>
+                <input
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="quantity"
+                    type="number"
+                    placeholder="Enter price"
+                    required="required"
+                    {...register("Quantity")}
+                />
+            </div>
             <p className="error">{errors.Price?.message}</p>
 
             <div className="mb-4">
@@ -124,6 +157,44 @@ const ProductForm = () => {
                 />
             </div>
             <p className="error">{errors.Category?.message}</p>
+            <div className="mb-4">
+                <label
+                    className="block text-gray-700 text-sm font-bold mb-2"
+                    htmlFor="stars"
+                >
+                    Stars
+                </label>
+                <input
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="stars"
+                    type="number"
+                    placeholder="Enter price"
+                    required="required"
+                    {...register("Stars")}
+                />
+
+
+
+            </div>
+            <p className="error">{errors.Stars?.message}</p>
+
+
+            <div className="mb-4">
+                <label
+                    className="block text-gray-700 text-sm font-bold mb-2"
+                    htmlFor="imageLink"
+                >
+                    Image Link
+                </label>
+                <input
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="imageLink"
+                    accept="image/*"
+                    type="file" // Sử dụng kiểu file
+                    required="required"
+                    {...register("ImageLink")}
+                />
+            </div>
 
             <div className="flex items-center">
                 <button
