@@ -29,6 +29,7 @@ const UsersTable = () => {
                         <th className="px-4 py-2  text-left bg-gray-100 border">ID</th>
                         <th className="px-4 py-2  text-left bg-gray-100 border">Email</th>
 
+                        <th className="px-4 py-2  text-left bg-gray-100 border">Name</th>
                         <th className="px-4 py-2  text-left bg-gray-100 border">Role</th>
                         {/* Uncomment the lines below once you have the respective fields in the API response */}
                         {/* <th className="px-4 py-2 bg-gray-100 border">Registration Date</th>
@@ -42,11 +43,12 @@ const UsersTable = () => {
                             <td className="px-4 py-2 border">{user.id}</td>
 
                             <td className="px-4 py-2 border">{user.email}</td>
+                            <td className="px-4 py-2 border">{user.name}</td>
                             <td className="px-4 py-2 border">{user.role}</td>
-                            {/* Uncomment the lines below once you have the respective fields in the API response */}
-                            {/* <td className="px-4 py-2 border">{user.registration_date}</td>
-              <td className="px-4 py-2 border">{user.last_login}</td>
-              <td className="px-4 py-2 border">{user.status}</td> */}
+                            {/* Uncomment the lines below once you have the respective fields in the API response
+                            <td className="px-4 py-2 border">{user.registration_date}</td>
+                            <td className="px-4 py-2 border">{user.last_login}</td>
+                            <td className="px-4 py-2 border">{user.status}</td> */}
                         </tr>
                     ))}
                 </tbody>

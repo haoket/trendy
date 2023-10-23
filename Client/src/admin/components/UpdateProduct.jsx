@@ -1,50 +1,126 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import React, { useEffect, useState } from "react";
-import * as yup from "yup";
-import { useForm } from "react-hook-form";
-import { getProductById, updateProduct } from "../../utils/apiCalls";
-import { useParams } from "react-router-dom";
+
+import { useForm, Controller } from "react-hook-form";
+import { getProductById, updateProduct, uploadImage, getCategory } from "../../utils/apiCalls";
+import { useNavigate, useParams } from "react-router-dom";
+import { apiDomain } from "../../utils/utilsDomain";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 const UpdateProductForm = () => {
-    const [data, setData] = useState([])
-    // const [name, setName] = useState("");
-    // const [description, setDescripton] = useState("");
-    // const [price, setPrice] = useState("");
-    // const [category, setCategory] = useState("");
-
-
+    const [data, setData] = useState([]);
+    const [selectedImages, setSelectedImages] = useState([]);
+    const [name, setName] = useState("");
+    const [description, setDescription] = useState("");
+    const [price, setPrice] = useState("");
+    const [category, setCategory] = useState("");
+    const [stars, setStars] = useState("");
+    const [quantity, setQuantity] = useState("");
     const { product_id } = useParams()
-
-    const getProduct = async () => { const data = await getProductById(product_id); setData(data) }
-
-    useEffect(() => {
-        getProduct()
-    }, [])
-
-    const schema = yup.object().shape({
-        Name: yup.string().required("Name is required"),
-        Description: yup.string().required("Description is required"),
-        Price: yup.string().required("Price is required"),
-        Category: yup.string().required("Category is required"),
-        // ImageLink: yup.string().url("Invalid URL format").required("Image URL is required"),
-    });
-
+    const navigate = useNavigate();
+    const [categories, setCategories] = useState([]); // State to store categories
+    const fetchCategories = async () => {
+        try {
+            const result = await getCategory(); // Fetch categories from your API
+            setCategories(result); // Update the categories state
+        } catch (error) {
+            console.error("Error fetching categories:", error);
+        }
+    };
     const {
         register,
         handleSubmit,
         formState: { errors },
+        control, // Add control from react-hook-form
     } = useForm({
-        resolver: yupResolver(schema),
-    });
 
-    const onSubmit = (data) => {
-        console.log(data)
-        updateProduct(data, product_id)
-        
+    });
+    const getProduct = async () => {
+        const data = await getProductById(product_id);
+        setData(data);
+
+
+        setName(data.Name);
+        setDescription(data.Description);
+        setPrice(data.Price);
+        setCategory(data.Category);
+        setStars(data.Stars);
+        setQuantity(data.Quantity);
+        setSelectedImages(JSON.parse(data.ImageLink));
+
+    }
+
+
+    useEffect(() => {
+        getProduct();
+        fetchCategories();
+
+    }, [])
+
+
+
+    const onSubmit = async () => {
+        // e.preventDefault();
+        // updateProduct(data, product_id)
+        try {
+            const dataUpdate = {
+                Name: name,
+                Description: description,
+                Price: price,
+                Category: category,
+                Stars: stars,
+                Quantity: quantity,
+                ImageLink: selectedImages
+            };
+            console.log('====================================');
+            console.log("dataUpdate", dataUpdate);
+            console.log('====================================');
+            await updateProduct(dataUpdate, product_id);
+            alert("Product updated successfully");
+            navigate("/admin/products");
+        } catch (error) {
+            console.error("Error update product:", error);
+        }
+
+
+    };
+    const handleImageSelect = async (e) => {
+        const files = e.target.files[0]; // Chọn tất cả các tệp đã chọn
+
+        if (files) {
+
+            const formData = new FormData();
+            formData.append('ImageLink', files);
+
+            try {
+                // Gửi hình ảnh lên server
+                const response = await uploadImage(formData);
+
+                const uploadedImageName = response.fileName;
+
+                // Cập nhật danh sách hình ảnh
+                setSelectedImages([...selectedImages, uploadedImageName]);
+
+            } catch (error) {
+                console.error('Lỗi khi tải lên hình ảnh: ', error);
+            }
+        }
+        console.log('====================================');
+        console.log("selectedImages", selectedImages);
+        console.log('====================================');
     };
 
+    const handleRemoveImage = (imageIndex) => {
+        const newSelectedImages = [...selectedImages];
+        newSelectedImages.splice(imageIndex, 1);
+        setSelectedImages(newSelectedImages);
+
+
+    }
+
     return (
-        <form className="max-w-sm m-6" onSubmit={handleSubmit(onSubmit)}>
+        <form className="max-w-full m-6" onSubmit={onSubmit}>
             <div className="mb-4">
                 <label
                     className="block text-gray-700 text-sm font-bold mb-2"
@@ -56,13 +132,15 @@ const UpdateProductForm = () => {
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     id="productName"
                     type="text"
+
                     placeholder="Enter product name"
                     required="required"
-                    {...register("Name")}
-                    Value={data.Name}
+                    value={name}
+                    onChange={(e) => { setName(e.target.value); }}
+
                 />
             </div>
-            <p className="error">{errors.Name?.message}</p>
+            {/* <p className="error">{errors.Name?.message}</p> */}
             <div className="mb-4">
                 <label
                     className="block text-gray-700 text-sm font-bold mb-2"
@@ -70,17 +148,13 @@ const UpdateProductForm = () => {
                 >
                     Description
                 </label>
-                <textarea
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="description"
-                    rows="3"
-                    placeholder="Enter description"
-                    required="required"
-                    {...register("Description")}
-                    value={data.Description}
+                <ReactQuill
+                    theme="snow"
+                    value={description}
+                    onChange={setDescription}
                 />
             </div>
-            <p className="error">{errors.Description?.message}</p>
+            {/* <p className="error">{errors.Description?.message}</p> */}
             <div className="mb-4">
                 <label
                     className="block text-gray-700 text-sm font-bold mb-2"
@@ -94,11 +168,10 @@ const UpdateProductForm = () => {
                     type="number"
                     placeholder="Enter price"
                     required="required"
-                    {...register("Price")}
-                    Value = {data.Price}
+                    onChange={(e) => { setPrice(e.target.value); }}
+                    value={price}
                 />
             </div>
-            <p className="error">{errors.Price?.message}</p>
             <div className="mb-4">
                 <label
                     className="block text-gray-700 text-sm font-bold mb-2"
@@ -106,38 +179,95 @@ const UpdateProductForm = () => {
                 >
                     Category
                 </label>
-                <input
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="category"
-                    type="text"
-                    placeholder="Enter category"
-                    required="required"
-                    {...register("Category")}
-                    value={data.Category}
+                <Controller
+                    name="Category"
+                    control={control}
+                    render={({ field }) => (
+                        <select
+                            {...field}
+                            onChange={(e) => {
+                                setCategory(e.target.value);
+                            }}
+                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        >
+                            <option value="">Select a category</option>
+                            {categories.map((category, index) => (
+                                <option key={index} value={category.Name}>
+                                    {category.Name}
+                                </option>
+                            ))}
+                        </select>
+                    )}
                 />
             </div>
-            <p className="error">{errors.Category?.message}</p>
-            {/* <div className="mb-4">
+            {/* <p className="error">{errors.Category?.message}</p> */}
+            <div className="mb-4">
                 <label
                     className="block text-gray-700 text-sm font-bold mb-2"
-                    htmlFor="image"
+                    htmlFor="stars"
                 >
-                    Image
+                    Stars
                 </label>
                 <input
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="imageLink"
-                    type="file"
-                    placeholder="Enter image URL"
+                    id="stars"
+                    type="number"
+                    placeholder="Enter price"
                     required="required"
-                    {...register("ImageLink")}
-                
+                    value={stars}
+                    onChange={(e) => { setStars(e.target.value); }}
                 />
-            </div> */}
+
+
+
+            </div>
+            <div className="mb-4">
+                <label
+                    className="block text-gray-700 text-sm font-bold mb-2  flex flex-col"
+                    htmlFor="imageLink"
+                >
+                    Image Link
+
+
+                    <div className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded w-20 flex " >Chọn hình ảnh </div>
+                </label>
+                <input
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline hidden"
+                    id="imageLink"
+                    accept="image/*"
+                    type="file" // Sử dụng kiểu file
+                    // required="required"
+                    multiple
+                    onChange={handleImageSelect}
+                />
+                <div className="flex">
+                    {selectedImages && selectedImages.length > 0 && (
+                        <div className="flex">
+                            {selectedImages.map((image, index) => (
+                                <div key={index} className="m-1 relative">
+                                    <img src={apiDomain + "/image/" + image} width={100} height={100} alt={`Ảnh ${index}`} />
+                                    <button
+                                        className="bg-red-500 hover-bg-red-700 text-white font-bold py-1 px-2 rounded absolute top-0 right-0"
+                                        onClick={() => handleRemoveImage(index)}
+                                    >
+                                        Xóa
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            </div >
+
+
+
+
+
             <div className="flex items-center ">
                 <button
                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                     type="submit"
+                    onClick={onSubmit}
                 >
                     Submit
                 </button>

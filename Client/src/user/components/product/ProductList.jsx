@@ -1,19 +1,50 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Product from "./Product";
 import Clients from "../../../shared/Clients";
 import { FaSearch, FaCaretDown } from "react-icons/fa";
 import PriceFilter from "../../../shared/Range";
+import { data } from "autoprefixer";
+import { getCategory } from "../../../utils/apiCalls";
 // import filterProductsByCategory from "./FilterController"; 
 
+
+
+
+//Lấy danh sách sản phẩm
 const ProductList = () => {
   const [showCategories, setShowCategories] = useState(false);
   const [showPrice, setShowPrice] = useState(false);
 
-  const toggleCategories = () => {
-    setShowCategories(!showCategories);
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    fetchCategory();
+  })
+
+
+
+  // lấy danh sách danh mục
+  const fetchCategory = async () => {
+    try {
+      const result = await getCategory();
+      if (Array.isArray(result)) {
+        setData(result);
+      } else {
+        console.error("Invalid data returned from getCategory");
+      }
+    } catch (error) {
+      console.error("Error fetching category:", error);
+    }
   };
 
+
+  //button hiện danh mục
+  const toggleCategories = () => {
+    setShowCategories(!showCategories);
+
+  };
+  // button hiện đơn vị giá
   const togglePrice = () => {
     setShowPrice(!showPrice);
   };
@@ -51,7 +82,20 @@ const ProductList = () => {
                 }`}
             />
           </h1>
-          {showCategories && (
+
+
+
+          {showCategories && data.length > 0 && data.map((item, index) => (
+            <ul className="text-[#7f7f7f] mx-5 mb-3 tracking-wide">
+              <li className="hover:text-[#f42c37] cursor-pointer hover:font-bold" key={index} >
+                {item.Name}
+
+              </li>
+            </ul>
+          ))}
+
+
+          {/* {showCategories && (
             <ul className="text-[#7f7f7f] mx-5 mb-3 tracking-wide">
               <li className="hover:text-[#f42c37] cursor-pointer hover:font-bold">
                 Earphones
@@ -75,7 +119,7 @@ const ProductList = () => {
                 Uncategorized
               </li>
             </ul>
-          )}
+          )} */}
           <hr />
           <h1
             className="font-bold text-1xl tracking-wide m-6 cursor-pointer"
@@ -101,7 +145,7 @@ const ProductList = () => {
             <Product />
           </div>
         </div>
-      </div>
+      </div >
       {/* <Clients /> */}
     </>
   );

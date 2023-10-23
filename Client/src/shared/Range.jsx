@@ -7,12 +7,12 @@ const PriceFilter = () => {
   const [filteredProducts, setFilteredProducts] = useState([]);
 
   const products = [
-    { name: 'Smartwatch 2.0 LTE Wifi', price:199.99 },
-    { name: 'Wireless Audio System Multiroom 360', price:299.99 },
-    { name: 'Gore Wear C7', price: 159.99},
-    { name: 'Audio System Multiroom 360', price:299.99 },
-    { name: 'Beats', price:149.99 },
-   ,
+    { name: 'Smartwatch 2.0 LTE Wifi', price: 199.99 },
+    { name: 'Wireless Audio System Multiroom 360', price: 299.99 },
+    { name: 'Gore Wear C7', price: 159.99 },
+    { name: 'Audio System Multiroom 360', price: 299.99 },
+    { name: 'Beats', price: 149.99 },
+    ,
     // Add more products here
   ];
 
@@ -31,7 +31,7 @@ const PriceFilter = () => {
           <div className="flex items-center">
             <div className="flex items-center">
               <div className="font-bold">$0</div>
-             
+
             </div>
             <input
               type="range"
@@ -39,12 +39,12 @@ const PriceFilter = () => {
               id="max-price"
               min={0}
               max={1000}
-              value={maxPrice}
+              Value={maxPrice}
               onChange={(e) => setMaxPrice(Number(e.target.value))}
             />
             <div className="flex items-center">
               <div className="font-bold">${maxPrice}</div>
-            
+
             </div>
           </div>
         </div>

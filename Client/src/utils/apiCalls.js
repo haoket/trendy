@@ -10,7 +10,18 @@ export const createProduct = async (product) => {
 
   try {
     // axios request
-    const { data } = await axios.post(apiDomain + "/products", product, {
+    const { data } = await axios.post(apiDomain + "/createproducts", product);
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const uploadImage = async (dataImage) => {
+
+  try {
+    // axios request
+    const { data } = await axios.post(apiDomain + "/uploadImage", dataImage, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -29,23 +40,7 @@ export const createCategory = async (categories) => {
     console.error(error);
   }
 };
-// export const createProduct = async (data) => {
-//   const formData = new FormData();
-//   formData.append("Name", data.Name);
-//   formData.append("Description", data.Description);
-//   formData.append("Price", data.Price);
-//   formData.append("Quantity", data.Quantity);
-//   formData.append("Category", data.Category);
-//   formData.append("Stars", data.Stars);
-//   formData.append("ImageLink", data.ImageLink[0]); // Lưu ý sử dụng [0] để lấy tệp đầu tiên nếu người dùng chọn nhiều tệp
 
-//   try {
-//     const response = await axios.post(apiDomain + "/products", formData);
-//     console.log("Sản phẩm đã được tạo:", response.data);
-//   } catch (error) {
-//     console.error("Lỗi khi tạo sản phẩm:", error);
-//   }
-// };
 
 // UPDATE
 export const updateProduct = async (updatedProduct, productID) => {

@@ -28,7 +28,7 @@ export const ContextProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    
+
     axios.get(`${apiDomain}/products`)
       .then((response) => {
         const imageUrls = [
@@ -46,7 +46,7 @@ export const ContextProvider = ({ children }) => {
 
         const productsWithImageURL = response.data.map((product, index) => ({
           ...product,
-          ImageURL: imageUrls[index], 
+          ImageURL: imageUrls[index],
         }));
 
         setProducts(productsWithImageURL);
@@ -63,18 +63,18 @@ export const ContextProvider = ({ children }) => {
 
   const handleAddToCart = async (product_id) => {
     try {
-     
+
       await axios.post(`${apiDomain}/cart`, { product_id });
 
       getCartItems();
 
-    
+
     } catch (error) {
       console.error("Error adding item to cart:", error);
     }
   };
 
-  
+
   useEffect(() => {
   }, [state.user]);
 

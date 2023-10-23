@@ -38,10 +38,10 @@ export const getCategoryById = (req, res) => {
 
 // Create a new category
 export const createCategory = (req, res) => {
-  const { Name, Description } = req.body;
-  const query = 'INSERT INTO Categories (Name, Description) VALUES (?, ?)';
+  const { Name, Description, Slug } = req.body;
+  const query = 'INSERT INTO Categories (Name, Description, slug) VALUES (?, ?, ?)';
 
-  dbConnection.query(query, [Name, Description], (error) => {
+  dbConnection.query(query, [Name, Description, Slug], (error) => {
     if (error) {
       console.error('Lỗi khi tạo danh mục:', error);
       res.status(500).json({ error: 'Lỗi khi tạo danh mục' });

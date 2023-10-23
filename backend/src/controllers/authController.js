@@ -61,7 +61,7 @@ export const login = async (req, res) => {
         return;
       }
 
-      // Thay đổi câu lệnh SQL để phù hợp với MySQL
+
       const selectUserQuery = `SELECT * FROM Users WHERE email = ?`;
 
       dbConnection.query(selectUserQuery, [email], (error, results) => {
@@ -85,6 +85,7 @@ export const login = async (req, res) => {
               res.status(200).json({
                 email: user.email,
                 id: user.id,
+                name: user.name,
                 role: user.role,
                 token: token,
               });

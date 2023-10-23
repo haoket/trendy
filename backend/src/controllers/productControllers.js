@@ -4,19 +4,15 @@ import createDatabaseConnection from '../config/database.js';
 const dbConnection = createDatabaseConnection();
 // Create a new product
 export const createProduct = (req, res) => {
-  const { Name, Description, Price, Quantity, Category, Manufacturer, Stars } = req.body;
+  console.log('====================================');
+  console.log("req", req.body);
+  console.log('====================================');
+  const { Name, Description, Price, Quantity, Category, Stars, ImageLink } = req.body;
+  const imageLinkJSON = JSON.stringify(ImageLink);
 
+  const query = 'INSERT INTO Products (Name, Description, Price, Quantity, Category, Stars, ImageLink) VALUES (?, ?, ?,?, ?, ?, ?)';
 
-  // Kiểm tra xem tệp hình ảnh đã tải lên thành công chưa
-  if (!req.file) {
-    return res.status(400).json({ error: 'Tệp hình ảnh không được gửi' });
-  }
-
-  const ImageLink = req.file.filename; // Lấy tên tệp hình ảnh đã tải lên
-
-  const query = 'INSERT INTO Products (Name, Description, Price, Quantity, Category, Manufacturer, Stars, ImageLink) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
-
-  dbConnection.query(query, [Name, Description, Price, Quantity, Category, Manufacturer, Stars, ImageLink], (error) => {
+  dbConnection.query(query, [Name, Description, Price, Quantity, Category, Stars, imageLinkJSON], (error) => {
     if (error) {
       console.error('Lỗi khi tạo sản phẩm:', error);
       res.status(500).json({ error: 'Lỗi khi tạo sản phẩm' });
@@ -28,12 +24,15 @@ export const createProduct = (req, res) => {
 
 // Update a product
 export const updateProduct = (req, res) => {
+  console.log('====================================');
+  console.log("req", req.body);
+  console.log('====================================');
   const productId = req.params.id;
-  const { Name, Description, Price, Quantity, Category, Manufacturer } = req.body;
+  const { Name, Description, Price, Quantity, Category, ImageLink } = req.body;
+  const imageLinkJSON = JSON.stringify(ImageLink);
+  const query = 'UPDATE Products SET Name = ?, Description = ?, Price = ?, Quantity = ?, Category = ?, ImageLink = ? WHERE ID = ?';
 
-  const query = 'UPDATE Products SET Name = ?, Description = ?, Price = ?, Quantity = ?, Category = ?, Manufacturer = ? WHERE ID = ?';
-
-  dbConnection.query(query, [Name, Description, Price, Quantity, Category, Manufacturer, productId], (error) => {
+  dbConnection.query(query, [Name, Description, Price, Quantity, Category, imageLinkJSON, productId], (error) => {
     if (error) {
       console.error('Lỗi khi cập nhật sản phẩm:', error);
       res.status(500).json({ error: 'Lỗi khi cập nhật sản phẩm' });
@@ -64,6 +63,23 @@ export const getProductById = (req, res) => {
   });
 };
 
+export const getAllProduct = (req, res) => {
+  const productId = req.params.id;
+  const query = 'SELECT * FROM Products';
+
+  dbConnection.query(query, [productId], (error, results) => {
+    if (error) {
+      console.error('Lỗi khi lấy thông tin sản phẩm:', error);
+      res.status(500).json({ error: 'Lỗi khi lấy thông tin sản phẩm' });
+    } else {
+      if (results.length === 0) {
+        res.status(404).json({ message: 'Sản phẩm không được tìm thấy' });
+      } else {
+        res.status(200).json(results[0]);
+      }
+    }
+  });
+};
 
 
 
@@ -97,3 +113,17 @@ export const getProducts = (req, res) => {
     }
   });
 };
+
+
+
+export const uploadImage = (req, res) => {
+  if (req.file) {
+    const uploadedImageName = req.file.filename;
+    console.log('====================================');
+    console.log(uploadedImageName);
+    console.log('====================================');
+    res.json({ fileName: uploadedImageName });
+  } else {
+    res.status(400).send('Không có hình ảnh được tải lên.');
+  }
+}

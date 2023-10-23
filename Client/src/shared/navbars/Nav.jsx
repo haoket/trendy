@@ -29,19 +29,19 @@ const Navbar = () => {
           {user && (
             <>
               <NavLink to="/" >
-                Home
+                Trang chủ
               </NavLink>
               <NavLink to="/products" >
-                Shop
+                Cửa hàng
               </NavLink>
               <NavLink to="/about" >
-                About us
+                Về chúng tôi
               </NavLink>
               <NavLink to="/blog" >
                 Blog
               </NavLink>
               <NavLink to="/contact" >
-                Contact Us
+                Liên hệ
               </NavLink>
               <NavLink to="/track" >
                 Track Order
@@ -52,7 +52,7 @@ const Navbar = () => {
         </div>
         {!user && (
           <NavLink to="/auth/login" className="btn">
-            Login
+            Đăng nhập
           </NavLink>
         )}
         {user && (
@@ -62,7 +62,7 @@ const Navbar = () => {
 
           <button className="btn" onClick={handleLogout} style={{ fontSize: "1rem" }}>
             {/* <h1>{user}</h1> */}
-            Logout
+            Đăng xuất
           </button>
         )}
 
