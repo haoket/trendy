@@ -6,7 +6,6 @@ const dbConnection = createDatabaseConnection();
 // Get all categories
 export const getCategories = (req, res) => {
   const query = 'SELECT * FROM Categories';
-
   dbConnection.query(query, (error, results) => {
     if (error) {
       console.error('Lỗi khi lấy danh sách danh mục:', error);

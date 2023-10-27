@@ -22,8 +22,8 @@ export const getUsers = (req, res) => {
 
   dbConnection.query(query, (error, results) => {
     if (error) {
-      console.error('Lỗi khi lấy danh sách sản phẩm:', error);
-      res.status(500).json({ error: 'Lỗi khi lấy danh sách sản phẩm' });
+      console.error('Lỗi khi lấy danh sách người dùng:', error);
+      res.status(500).json({ error: 'Lỗi khi lấy danh sách người dùng' });
     } else {
       res.status(200).json(results);
     }

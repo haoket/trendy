@@ -88,6 +88,20 @@ export const getProductById = async (productID) => {
   }
 };
 
+// get product by slug
+export const getProductBySlug = async (productSlug) => {
+  console.log('====================================');
+  console.log(`${apiDomain}/products/${productSlug}`);
+  console.log('====================================');
+  try {
+    // axios request
+    const { data } = await axios.get(apiDomain + "/products/tay-trang");
+
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+};
 //GETPRODUCT
 export const getProducts = async () => {
   try {

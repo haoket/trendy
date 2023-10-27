@@ -6,7 +6,8 @@ import {
   createProduct,
   updateProduct,
   deleteProduct,
-  uploadImage
+  uploadImage,
+  getProductsByCategory
 } from '../controllers/productControllers.js';
 import fs from 'fs';
 import path from 'path';
@@ -36,7 +37,13 @@ const upload = multer({ storage: storage });
 
 const productRoutes = (app) => {
   app.route('/products')
-    .get(getProducts)
+    .get(getProducts);
+
+  app.route('/products/abc')
+    .get(getProducts);
+
+  app.route('/getPrductByCategory/:slug')
+    .get(getProductsByCategory);
 
   app.route('/createproducts').post(createProduct);
 
@@ -48,10 +55,11 @@ const productRoutes = (app) => {
 
 
   app.route('/uploadImage')
-    .post(upload.single('ImageLink'), uploadImage)
+    .post(upload.single('ImageLink'), uploadImage);
 
-  app.route('/products/')
-    .get(getAllProduct);
+  // app.route('/products/')
+  //   .get(getAllProduct);
+
 };
 
 

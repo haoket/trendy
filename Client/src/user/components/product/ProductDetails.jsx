@@ -13,7 +13,15 @@ const ProductDetails = () => {
   const [itemCount, setItemCount] = useState(1);
   const { id } = useParams();
   const { setCartItems } = useContext(Context);
+  const [totalPrice, setTotalPrice] = useState();
+  const [price, setPrice] = useState();
 
+
+
+
+
+
+  // lấy hình ảnh đầu tiên của mảng 
   const parseImageLink = (imageLink) => {
     try {
       const imageArray = JSON.parse(imageLink);
@@ -26,18 +34,38 @@ const ProductDetails = () => {
     return null;
   };
 
+
   useEffect(() => {
     const fetchProductDetails = async () => {
       try {
         const response = await axios.get(`${apiDomain}/products/${id}`);
         setProduct(response.data);
+        setTotalPrice(response.data.Price);
+        setPrice(response.data.Price);
+        setNameProductCart(response.data.Name);
       } catch (error) {
         console.error('Error fetching product details:', error);
       }
     };
-    fetchProductDetails();
-  }, []);
 
+    fetchProductDetails();
+  }, [])
+
+  const handleIncrement = async () => {
+    setItemCount(itemCount + 1);
+    setTotalPrice(price * (itemCount + 1));
+  }
+  const handleDeCrease = () => {
+    if (itemCount > 1) {
+      setItemCount(itemCount - 1);
+
+      setTotalPrice(price * (itemCount - 1));
+
+    }
+  }
+
+
+  // Function to get the cart items using Axios
   const getCartItems = async () => {
     try {
       const response = await axios.get(`${apiDomain}/cart`);
@@ -47,9 +75,23 @@ const ProductDetails = () => {
     }
   };
 
-  const handleAddToCart = async (product_id) => {
+
+
+
+
+  // handle add to cart
+  const handleAddToCart = async () => {
+
+
+
+    const data = {
+      product_id: id,
+      quantity: itemCount,
+      price: totalPrice,
+      nameProductCart: product.Name,
+    }
     try {
-      await axios.post(`${apiDomain}/cart`, { product_id });
+      await axios.post(`${apiDomain}/cart`, data);
       getCartItems();
       toast.success(`${product.Name} has been added to the cart successfully!`, {
         position: "top-right",
@@ -64,7 +106,7 @@ const ProductDetails = () => {
       console.error("Error adding item to cart:", error);
     }
   };
-
+  //hiển thị đánh giá sao sản phẩm
   const renderStars = (stars) => {
     const filledStars = Math.min(stars, 5);
     const emptyStars = 5 - filledStars;
@@ -115,12 +157,12 @@ const ProductDetails = () => {
               <div className='flex flex-row gap-20'>
                 <div>
                   <p>Giá sản phẩm</p>
-                  <p className='font-bold text-2xl mb-10'> {product.Price}.000 vnđ</p>
+                  <p className='font-bold text-2xl mb-10'> {totalPrice}.000 vnđ</p>
                 </div>
                 <div className='flex gap-6 mb-10'>
                   <div className='flex items-center'>
                     <button
-                      onClick={() => setItemCount(itemCount - 1)}
+                      onClick={handleDeCrease}
                       disabled={itemCount <= 1}
                       className='border border-black rounded-md px-2 py-1 '
                     >
@@ -141,7 +183,7 @@ const ProductDetails = () => {
                     </button>
                     <span className='mx-2'>{itemCount}</span>
                     <button
-                      onClick={() => setItemCount(itemCount + 1)}
+                      onClick={handleIncrement}
                       className='border border-black rounded-md px-3 py-1'
                     >
                       <svg

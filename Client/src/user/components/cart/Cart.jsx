@@ -17,6 +17,20 @@ const Cart = () => {
   const { setCartItems: updateItemsCount } = useContext(Context);
   const [totalPrice, setTotalPrice] = useState(0);
 
+
+
+  const parseImageLink = (imageLink) => {
+
+    try {
+      const imageArray = JSON.parse(imageLink);
+      if (Array.isArray(imageArray) && imageArray.length > 0) {
+        return imageArray[0];
+      }
+    } catch (error) {
+      console.error('Error parsing ImageLink:', error);
+    }
+    return null;
+  };
   // Function to get the cart items using Axios
   const getCartItems = async () => {
     try {
@@ -92,21 +106,21 @@ const Cart = () => {
               <div className="rounded-[5px] h-[10rem]">
                 <img
                   className="rounded-[10px] h-full object-contain mb-4"
-                  src={item.ImageLink}
+                  src={apiDomain + "/image/" + parseImageLink(item.ImageLink)}
                   alt="product"
                 />
               </div>
 
 
-              <div>
+              <div >
                 <h3 className="font-bold hover:text-red-500 transition-all duration-300">
                   {item.Name}
                 </h3>
                 <p className="relative inline-block group font-bold">
-                  <span className="font-bold ">${item.Price}</span>
+                  <span className="font-bold text-red-500 ">{item.Price}.000VNĐ</span>
                 </p>
                 <br />
-                <button className="bg-[gray] px-3 py-1 w-fit flex items-center gap-2" onClick={() => handleRemoveItem(item.cart_id)}>
+                <button className="bg-[gray] text-white rounded-[20px] px-3 py-1 w-fit flex items-center gap-2" onClick={() => handleRemoveItem(item.cart_id)}>
                   <FaTrash /> Remove
                 </button>
 
@@ -123,7 +137,7 @@ const Cart = () => {
             <p className="mb-4 font-bold">Total Price:</p>
             <p className="font-bold mb-4">$ {totalPrice.toFixed(2)}</p>
             {/* Use the handleProceedToCheckout function to navigate to the CheckoutPage */}
-            
+
             <Payment cartItems={cartItems} />
           </div>
         </div>

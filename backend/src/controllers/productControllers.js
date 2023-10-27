@@ -66,17 +66,46 @@ export const getProductById = (req, res) => {
 export const getAllProduct = (req, res) => {
   const productId = req.params.id;
   const query = 'SELECT * FROM Products';
-
   dbConnection.query(query, [productId], (error, results) => {
     if (error) {
       console.error('Lỗi khi lấy thông tin sản phẩm:', error);
       res.status(500).json({ error: 'Lỗi khi lấy thông tin sản phẩm' });
     } else {
       if (results.length === 0) {
-        res.status(404).json({ message: 'Sản phẩm không được tìm thấy' });
+        res.status(404).json({ message: 'Sản phẩm không được tìm thấyaâa' });
       } else {
         res.status(200).json(results[0]);
       }
+    }
+  });
+};
+export const getProductsByCategory = async (req, res) => {
+  const productSlug = req.params.slug;
+
+  // Tìm tên danh mục (category) bằng slug
+  dbConnection.query('SELECT Name FROM categories WHERE slug = ?', [productSlug], (error, categoryResults) => {
+    if (error) {
+      console.error('Lỗi khi truy vấn cơ sở dữ liệu:', error);
+      res.status(500).json({ error: 'Lỗi khi lấy thông tin danh mục' });
+    } else {
+      if (categoryResults.length === 0) {
+        res.status(404).json({ message: 'Danh mục không được tìm thấy' });
+        return;
+      }
+
+      const categoryName = categoryResults[0].Name;
+
+      // Tìm danh sách sản phẩm bằng tên danh mục
+      dbConnection.query('SELECT * FROM products WHERE category = ?', [categoryName], (error, productResults) => {
+        if (error) {
+          console.error('Lỗi khi truy vấn cơ sở dữ liệu:', error);
+          res.status(500).json({ error: 'Lỗi khi lấy thông tin sản phẩm' });
+        } else {
+
+          res.status(200).json(productResults);
+
+        }
+      });
     }
   });
 };
@@ -103,7 +132,6 @@ export const deleteProduct = (req, res) => {
 };
 export const getProducts = (req, res) => {
   const query = 'SELECT * FROM Products';
-
   dbConnection.query(query, (error, results) => {
     if (error) {
       console.error('Lỗi khi lấy danh sách sản phẩm:', error);

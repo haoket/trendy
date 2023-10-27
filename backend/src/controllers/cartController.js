@@ -38,10 +38,10 @@ export const getCartById = (req, res) => {
 
 // Create a new cart item
 export const createCart = (req, res) => {
-  const { id, product_id } = req.body;
-  const query = 'INSERT INTO cart (id, product_id) VALUES (?, ?)';
+  const { product_id, nameProductCart, quantity, price } = req.body;
+  const query = 'INSERT INTO cart ( product_id, nameProductCart, quantity, price) VALUES (?, ?, ?,?)';
 
-  dbConnection.query(query, [id, product_id], (error) => {
+  dbConnection.query(query, [product_id, nameProductCart, quantity, price], (error) => {
     if (error) {
       console.error('Lỗi khi tạo sản phẩm trong giỏ hàng:', error);
       res.status(500).json({ error: 'Lỗi khi tạo sản phẩm trong giỏ hàng' });

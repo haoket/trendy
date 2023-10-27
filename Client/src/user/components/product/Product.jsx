@@ -1,7 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { FaStar, FaRegStar } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
-import { Context } from '../../../context/Context';
 import axios from 'axios';
 import { apiDomain } from '../../../utils/utilsDomain';
 import { ToastContainer, toast } from 'react-toastify';
@@ -45,30 +43,31 @@ const Product = () => {
         <div key={index} className="flex flex-col gap-2 cursor-pointer select ">
           {/* Wrap the product image and name with Link component */}
           <Link to={`/product/${product.ID}`}>
-            <div className="rounded-[5px] h-[13rem]">
+            <div className="rounded-[5px] h-[13rem] flex justify-center">
               <img
-                className="rounded-[10px] h-full object-contain"
+                className="rounded-[10px] h-full object-contain "
                 src={apiDomain + "/image/" + parseImageLink(product.ImageLink)}
                 alt={product.Name}
               />
             </div>
 
 
-            <h3 className="font-bold hover:text-red-500 transition-all duration-300">
-              {product.Name}
+            <h3 className="font-bold hover:text-red-500 transition-all duration-300 px-16  flex items-center">
+              <p className='text-[#5c5c59]'>{product.Name}</p>
             </h3>
           </Link>
-          <div className="relative inline-block group font-bold">
-            <span className="inline-block transition-all duration-300">
-              ${product.Price}
+          <div className="relative inline-block group font-bold px-16 ">
+            <span className="inline-block transition-all duration-300 ">
+              <p className='text-[#f42c37]'>{product.Price}.000 VNĐ</p>
+
             </span>
             <ToastContainer />
-            {/* <button
+            <button
               className="left-full group-hover:translate-y-0 bg-red-500 text-white rounded-[20px] opacity-0 group-hover:opacity-100 transition-all duration-300"
               onClick={() => handleAddToCart(product.ID)} // Call handleAddToCart with the product ID when the button is clicked
             >
               Add to Cart
-            </button> */}
+            </button>
           </div>
 
         </div>

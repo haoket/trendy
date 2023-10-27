@@ -22,6 +22,8 @@ import CreatePoductForm from "../admin/components/CreateProduct";
 import OrdersTable from "../admin/components/OrdersTable";
 import Track from "../pages/Track/Track";
 import Category from "../admin/components/Category";
+import ProductCategories from "../user/components/product/ProductCategories";
+
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
@@ -38,6 +40,7 @@ export const router = createBrowserRouter(
                 <Route path="product/:id" element={<ProductDetails />} />
                 <Route path="cart" element={<Cart />} />
                 <Route path="checkout" element={<CheckoutPage />} />
+                <Route path="products/:slug" element={<ProductCategories />} />
 
             </Route>
             {/* ADMIN ROUTES */}
