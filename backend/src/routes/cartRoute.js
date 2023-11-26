@@ -5,6 +5,7 @@ import {
   createCart,
   updateCart,
   deleteCart,
+  deleteAllCart
 } from '../controllers/cartController.js';
 
 const cartRoutes = (app) => {
@@ -16,6 +17,9 @@ const cartRoutes = (app) => {
     .get(getCartById)
     .put(updateCart)
     .delete(deleteCart);
+
+
+  app.route('/delete-cart').delete(deleteAllCart);
 };
 
 export default cartRoutes;

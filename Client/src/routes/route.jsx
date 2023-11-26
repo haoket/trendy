@@ -3,8 +3,6 @@ import Login from "../pages/auth/Login";
 import Signup from "../pages/auth/Signup";
 import AuthLayout from "../Layouts/AuthLayout";
 import UserLayout from "../Layouts/UserLayout";
-
-
 import { AdminLayout } from "../Layouts/AdminLayout";
 import Home from "../pages/home/Home";
 import Cart from "../user/components/cart/Cart";
@@ -20,9 +18,15 @@ import UsersTable from "../admin/components/UsersTable";
 import CheckoutPage from "../user/components/checkout/Checkout";
 import CreatePoductForm from "../admin/components/CreateProduct";
 import OrdersTable from "../admin/components/OrdersTable";
-import Track from "../pages/Track/Track";
 import Category from "../admin/components/Category";
 import ProductCategories from "../user/components/product/ProductCategories";
+import { Order } from "../user/components/order/Order";
+import { Profile } from "../user/components/profile/Profile";
+import { OrderSuccess } from "../user/components/order/OrderSuccess";
+import { OrderWaiting } from "../user/components/order/OrderWaiting";
+import { OrderShiping } from "../user/components/order/OrderShiping";
+import { OrderCancel } from "../user/components/order/OrderCancel";
+import ProductSearchPage from "../user/components/product/ProductSearchPage";
 
 
 export const router = createBrowserRouter(
@@ -35,13 +39,19 @@ export const router = createBrowserRouter(
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/blog" element={<Blog />} />
                 <Route path="/about" element={<About />} />
-                <Route path="/track" element={<Track />} />
                 <Route path="products" element={<ProductList />} />
                 <Route path="product/:id" element={<ProductDetails />} />
                 <Route path="cart" element={<Cart />} />
                 <Route path="checkout" element={<CheckoutPage />} />
                 <Route path="products/:slug" element={<ProductCategories />} />
-
+                <Route path="products/search=:slug" element={<ProductSearchPage />} />
+                <Route path="/create-order" element={<Order />} />
+                <Route path="/profile/" element={<Profile />}>
+                    <Route index element={<OrderWaiting />} />
+                    <Route path="order-success" element={<OrderSuccess />} />
+                    <Route path="order-shiping" element={<OrderShiping />} />
+                    <Route path="order-cancel" element={<OrderCancel />} />
+                </Route>
             </Route>
             {/* ADMIN ROUTES */}
             <Route path="/admin" element={<AdminLayout />}>

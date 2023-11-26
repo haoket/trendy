@@ -7,7 +7,8 @@ import {
   updateProduct,
   deleteProduct,
   uploadImage,
-  getProductsByCategory
+  getProductsByCategory,
+  searchProduct,
 } from '../controllers/productControllers.js';
 import fs from 'fs';
 import path from 'path';
@@ -57,6 +58,10 @@ const productRoutes = (app) => {
   app.route('/uploadImage')
     .post(upload.single('ImageLink'), uploadImage);
 
+
+
+  app.route('/search=:name')
+    .get(searchProduct);
   // app.route('/products/')
   //   .get(getAllProduct);
 

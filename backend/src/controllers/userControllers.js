@@ -53,11 +53,13 @@ export const getUserById = async (req, res) => {
 
 // Create a new user
 export const createUser = async (req, res) => {
-  const { password, email } = req.body;
+  const { password, email, phone, name, address } = req.body;
+  console.log('====================================');
+  console.log('req', req.body);
+  console.log('====================================');
   const created_at = new Date().toDateString();
-
   try {
-    await dbConnection.query('INSERT INTO Users (password, email, created_at) VALUES (?, ?, ?)', [password, email, created_at]);
+    dbConnection.query('INSERT INTO Users (name, address, phone, password, email, created_at) VALUES (?, ?, ?,?,?,?)', [name, address, phone, password, email, created_at]);
     res.status(201).json({ message: 'User created successfully' });
   } catch (error) {
     console.log(error);
@@ -78,6 +80,23 @@ export const updateUser = async (req, res) => {
     res.status(500).json({ error: `An error occurred while updating the user... ${error.message}` });
   }
 };
+
+export const updateImage = async (req, res) => {
+  const userId = req.params.id;
+  console.log('====================================');
+  console.log('req', req.body);
+  console.log('====================================');
+  const { uploadImage } = req.body;
+
+  try {
+    dbConnection.query('UPDATE users SET img = ? WHERE id = ?', [uploadImage, userId]);
+    res.status(200).json({ message: 'User image update successfully' });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: `An error occurred while updating the user Image... ${error.message}` });
+  }
+};
+
 
 // Delete a user by ID
 export const deleteUser = async (req, res) => {

@@ -55,7 +55,18 @@ export const updateProduct = async (updatedProduct, productID) => {
     console.error(error);
   }
 };
-
+export const updateImage = async (selectedImages, userId) => {
+  try {
+    // axios request
+    const { data } = await axios.put(
+      apiDomain + "/users/update/" + userId,
+      selectedImages
+    );
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+};
 //DELETE
 
 export const deleteProduct = async (productID) => {

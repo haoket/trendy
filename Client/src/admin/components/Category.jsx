@@ -67,6 +67,18 @@ const Category = () => {
 
     return (
         <>
+            <div class="mb-4 mt-10 px-4">
+                <nav style={{ "--bs-breadcrumb-divider": ">" }} aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="#">
+                                <i class="bi bi-globe2 small me-2"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">Category</li>
+                    </ol>
+                </nav>
+            </div>
             {openModal && (
                 <Modal show={openModal} onHide={() => setOpenModal(false)} className="absolute top-1/2 left-1/2 bg-gray-200 transform -translate-x-1/2 -translate-y-1/2 w-1/2  rounded ">
                     <Modal.Header className="flex justify-center items-center">

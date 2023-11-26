@@ -56,6 +56,14 @@ const Signup = () => {
           {/* <h2>Dont Have an Account?</h2> */}
           <h1 className="font-bold text-2xl">Register Here</h1>
           <div>
+            <label>Name</label>
+            <input
+              type="text"
+              className="text-input" required="required"  {...register("name")}
+              placeholder="Enter your Name"
+            />
+          </div>
+          <div>
             <label>Email</label>
             <input
               type="text"
@@ -63,7 +71,22 @@ const Signup = () => {
               placeholder="Enter your Email"
             />
           </div>
-          <p className="error">{errors.email?.message}</p>
+          <div>
+            <label>Phone</label>
+            <input
+              type="number"
+              className="text-input" required="required"  {...register("phone")}
+              placeholder="Enter your Phone"
+            />
+          </div>
+          <div>
+            <label>Address</label>
+            <input
+              type="text"
+              className="text-input" required="required"  {...register("address")}
+              placeholder="Enter your Address"
+            />
+          </div>
           <div>
             <label>Password</label>
             <input

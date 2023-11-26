@@ -48,7 +48,6 @@ export const updateProduct = (req, res) => {
 export const getProductById = (req, res) => {
   const productId = req.params.id;
   const query = 'SELECT * FROM Products WHERE ID = ?';
-
   dbConnection.query(query, [productId], (error, results) => {
     if (error) {
       console.error('Lỗi khi lấy thông tin sản phẩm:', error);
@@ -155,3 +154,31 @@ export const uploadImage = (req, res) => {
     res.status(400).send('Không có hình ảnh được tải lên.');
   }
 }
+
+
+export const searchProduct = (req, res) => {
+  const itemSearch = req.params.name;
+  const keywords = itemSearch.split(' ');
+
+  // Tạo điều kiện SQL với nhiều từ khóa
+  const conditions = keywords.map(keyword => "Name LIKE ?").join(' AND ');
+  const query = `SELECT * FROM products WHERE ${conditions}`;
+  const queryParams = keywords.map(keyword => `%${keyword}%`);
+  dbConnection.query(query, queryParams, (error, results) => {
+    console.log('====================================');
+    console.log("results");
+    console.log('====================================');
+    if (error) {
+      console.error('Lỗi khi lấy thông tin sản phẩm:', error);
+      res.status(500).json({ error: 'Lỗi khi lấy thông tin sản phẩm' });
+    } else {
+      if (results.length === 0) {
+
+        res.status(404).json({ message: 'Sản phẩm không được tìm thấy trong bảng' });
+      } else {
+        res.status(200).json(results);
+      }
+    }
+  });
+};
+

@@ -39,8 +39,6 @@ const UpdateProductForm = () => {
     const getProduct = async () => {
         const data = await getProductById(product_id);
         setData(data);
-
-
         setName(data.Name);
         setDescription(data.Description);
         setPrice(data.Price);

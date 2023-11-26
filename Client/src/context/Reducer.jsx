@@ -1,3 +1,4 @@
+
 const Reducer = (state, action) => {
     switch (action.type) {
         case "LOGIN_SUCCESS":
@@ -12,6 +13,9 @@ const Reducer = (state, action) => {
             return {
                 user: null
             }
+        case "UPDATE_IMG":
+            state.user.img = action.payload;
+            return state;
         default:
             return state;
     }

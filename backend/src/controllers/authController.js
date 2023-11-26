@@ -14,7 +14,7 @@ export const loginRequired = (req, res, next) => {
 // Register a new User
 
 export const Register = async (req, res) => {
-  const { email, password } = req.body;
+  const { password, email, phone, name, address } = req.body;
   const role = 'user';
   const hashedPassword = bcrypt.hashSync(password, 10);
   const created_at = new Date().toLocaleString();
@@ -29,8 +29,8 @@ export const Register = async (req, res) => {
       }
 
       // Thay đổi câu lệnh SQL để phù hợp với MySQL
-      const insertUserQuery = `INSERT INTO Users (email, password, created_at, role) VALUES (?, ?, ?,?)`;
-      dbConnection.query(insertUserQuery, [email, hashedPassword, created_at, role], (error, results) => {
+      const insertUserQuery = `INSERT INTO Users (name, address, phone, password, email, created_at, role) VALUES (?, ?, ?,?,?,?,?)`;
+      dbConnection.query(insertUserQuery, [name, address, phone, hashedPassword, email, created_at, role], (error, results) => {
         if (error) {
           console.error('Lỗi khi thêm người dùng:', error);
           res.status(500).json({ error: 'Lỗi khi thêm người dùng' });
@@ -87,6 +87,7 @@ export const login = async (req, res) => {
                 id: user.id,
                 name: user.name,
                 role: user.role,
+                img: user.img,
                 token: token,
               });
             }

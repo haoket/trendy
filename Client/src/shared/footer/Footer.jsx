@@ -6,7 +6,7 @@ import Terms from '../Terms'
 const Footer = () => {
   return (
     <>
-      <div className='sm:flex justify-between m-[2rem]'>
+      <div className='sm:flex justify-between bg-black text-white  p-[2rem]'>
         <div className='flex flex-col gap-2'>
           <Link className='text-[#f77b82] font-bold tracking-widest mb-5'>TRENDYHUB</Link>
           <p className='mb-5 text-[#8e8d8d]'>Đặt uy tín lên hàng đầu<br /> Sự hài lòng của bạn là niềm vui của chúng tôi</p>
@@ -42,7 +42,7 @@ const Footer = () => {
           </div>
         </div>
       </div>
-      <Terms />
+
     </>
   )
 }

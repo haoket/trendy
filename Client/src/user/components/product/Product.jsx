@@ -7,6 +7,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import { getProducts } from '../../../utils/apiCalls';
 
 
+
+
 const Product = () => {
   const [data, setData] = useState([]);
   const [cartItems, setCartItems] = useState([]);
@@ -39,9 +41,58 @@ const Product = () => {
   return (
     <>
 
-      {data.map((product, index) => (
+      {/* <!-- product list --> */}
+      <div className="section">
+        <div className="container">
+          <div className="section-header">
+            <h2>Latest product</h2>
+          </div>
+          <div className="row" id="latest-products">
+            {data.map((product, index) => (
+              <div className="col-3 col-md-3 col-sm-9" key={index}>
+                <div className="product-card">
+                  <div className="product-card-img">
+                    <img src={apiDomain + "/image/" + parseImageLink(product.ImageLink)} alt="" />
+                    <img src={apiDomain + "/image/" + parseImageLink(product.ImageLink)} alt="" />
+                  </div>
+                  <div className="product-card-info">
+                    <div className="product-btn">
+                      <Link to={`/product/${product.ID}`}>
+                        <button className="btn-flat btn-hover btn-shop-now">Chi tiết</button>
+                      </Link>
+                      <button className="btn-flat btn-hover btn-cart-add">
+                        <i className='bx bxs-cart-add'></i>
+                      </button>
+
+                    </div>
+                    <div className="product-card-name">
+                      {product.Name}
+                    </div>
+                    <div className="product-card-price">
+                      {/* <span><del>300</del></span> */}
+                      <span className="curr-price">{product.Price}.000 VNĐ</span>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            ))}
+
+          </div>
+          <div className="section-footer">
+
+            <Link to="/products" className="btn-flat btn-hover">
+              view all
+            </Link>
+          </div>
+        </div>
+      </div>
+      {/* <!-- end product list --> */}
+
+
+      {/* {data.map((product, index) => (
         <div key={index} className="flex flex-col gap-2 cursor-pointer select ">
-          {/* Wrap the product image and name with Link component */}
+         ///////////// Wrap the product image and name with Link component
           <Link to={`/product/${product.ID}`}>
             <div className="rounded-[5px] h-[13rem] flex justify-center">
               <img
@@ -72,7 +123,7 @@ const Product = () => {
 
         </div>
 
-      ))}
+      ))} */}
     </>
   );
 };

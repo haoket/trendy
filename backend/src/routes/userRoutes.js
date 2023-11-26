@@ -5,6 +5,7 @@ import {
   createUser,
   updateUser,
   deleteUser,
+  updateImage
 } from '../controllers/userControllers.js';
 
 const userRoutes = (app) => {
@@ -16,6 +17,7 @@ const userRoutes = (app) => {
     .get(getUserById)
     .put(updateUser)
     .delete(deleteUser);
+  app.route('/users/update/:id').put(updateImage);
 };
 
 export default userRoutes;

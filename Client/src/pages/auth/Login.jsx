@@ -27,7 +27,7 @@ const Login = () => {
         // console.log(data);
         if (data.token) {
           dispatch({ type: "LOGIN_SUCCESS", payload: data.token });
-          localStorage.setItem("user", JSON.stringify(data.token));
+          localStorage.setItem("user", JSON.stringify(data));
           console.log(data)
           if (data.role === "admin") {
             navigate('/admin')

@@ -2,174 +2,180 @@ import Clients from "../../shared/Clients"
 import Devices from "../../shared/Devices"
 import Headphones from "../../shared/Headphones"
 import News from "../../shared/News"
-import SellerProducts from "../../shared/SellerProducts"
-import Service from "../../shared/Service"
+
+
 import Watches from "../../shared/Watches"
 import { Link, useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import Product from "../../user/components/product/Product"
 
 
 const Home = () => {
   const navigate = useNavigate()
   const user = JSON.parse(localStorage.getItem("user"))
+
+
+  const [slideIndex, setSlideIndex] = useState(0);
+  const [slidePlay, setSlidePlay] = useState(true);
+
+
+  const slides = [
+    {
+      name: 'JBL TUNE 750TNC',
+      title: 'Next-gen design',
+      description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati dolor commodi dignissimos culpa, eaque eos necessitatibus possimus veniam, cupiditate rerum deleniti? Libero, ducimus error? Beatae velit dolore sint explicabo! Fugit.',
+      image: '/images/a1.png',
+      animationDirection: 'top-down',
+    },
+    {
+      name: 'JBL Quantum ONE',
+      title: 'Ipsum dolor',
+      description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. A optio, voluptatum aperiam nobis quis maxime corporis porro alias soluta sunt quae consectetur aliquid blanditiis perspiciatis labore cumque, ullam, quam eligendi!',
+      image: '/images/a2.png',
+      animationDirection: 'right-left',
+    },
+    {
+      name: 'JBL JR 310BT',
+      title: 'Consectetur Elit',
+      description: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Explicabo aut fugiat, libero magnam nemo inventore in tempora beatae officiis temporibus odit deserunt molestiae amet quam, asperiores, iure recusandae nulla labore!',
+      image: '/images/a3.png',
+      animationDirection: 'left-right',
+    },
+  ];
+
+  const hideAllSlide = () => {
+    setSlideIndex(0);
+  };
+
+  const showSlide = () => {
+    // No need to manually handle DOM manipulation
+  };
+
+  const nextSlide = () => setSlideIndex((prevIndex) => (prevIndex + 1 === slides.length ? 0 : prevIndex + 1));
+
+  const prevSlide = () => setSlideIndex((prevIndex) => (prevIndex - 1 < 0 ? slides.length - 1 : prevIndex - 1));
+
+  useEffect(() => {
+    const slider = document.querySelector('.slider');
+
+    const handleMouseOver = () => setSlidePlay(false);
+    const handleMouseLeave = () => setSlidePlay(true);
+
+    slider.addEventListener('mouseover', handleMouseOver);
+    slider.addEventListener('mouseleave', handleMouseLeave);
+
+    return () => {
+      slider.removeEventListener('mouseover', handleMouseOver);
+      slider.removeEventListener('mouseleave', handleMouseLeave);
+    };
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (!slidePlay) return;
+      nextSlide();
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [slideIndex, slidePlay]);
+
+
   useEffect(() => {
     if (!user) {
       return navigate("/auth/login")
     }
   }, [user])
   if (user) {
-  return (
-    <>
-      <div className="bg-[#dcdcdc] px-[2rem] rounded-[20px] m-6 ">
-
-        <div className="flex flex-col gap-2 py-[6rem]">
-          <h5 className="font-bold">Beats Solo</h5>
-          <h1 className="font-bold text-5xl text-[#000000]">Wireless</h1>
-          <h1 className="relative font-bold text-[#f8f8f8] sm:text-[10rem] w-full tracking-wide">HEADPHONE</h1>
-          <button className="w-fit text-white  rounded-[50px] px-6 py-3 bg-[#f42c37]"><Link to ='/products'>Shop By Category</Link></button>
-          <img className="absolute h-[35rem] left-[17%] top-10 " src="https://demo.phlox.pro/shop-digital/wp-content/uploads/sites/127/2019/10/Group_1271-1.png" alt="" />
-
-        </div>
-        <div className="flex  flex-col items-end  h-[10rem] ">
-          <div></div>
-          <div className="flex flex-col w-[40%]  items-end ">
-            <p className="font-bold text-1xl mx-2 tracking-wide">Description</p>
-            <p className="hidden sm:block text-center tracking-wide text-[#666666]">
-              There are many variations passages <br />of Lorem Ipsum available, but the<br /> majority have suffered alteration.
-            </p>
+    return (
+      <>
+        <div className="hero">
+          <div className="slider">
+            <div className="container">
+              {slides.map((slide, index) => (
+                <div key={index} className={`slide ${index === slideIndex ? 'active' : ''}`}>
+                  <div className="info">
+                    <div className="info-content">
+                      <h3 className={slide.animationDirection}>{slide.name}</h3>
+                      <h2 className={`${slide.animationDirection} trans-delay-0-2`}>{slide.title}</h2>
+                      <p className={`${slide.animationDirection} trans-delay-0-4`}>{slide.description}</p>
+                      <div className={`${slide.animationDirection} trans-delay-0-6`}>
+                        <button className="btn-flat btn-hover">
+                          <span>shop now</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div className={`img ${slide.animationDirection}`}>
+                    <img src={slide.image} alt="" />
+                  </div>
+                </div>
+              ))}
+            </div>
+            <button className="slide-controll slide-next" onClick={() => { nextSlide(); }}>
+              <i className='bx bxs-chevron-right'></i>
+            </button>
+            <button className="slide-controll slide-prev" onClick={() => { prevSlide(); }}>
+              <i className='bx bxs-chevron-left'></i>
+            </button>
           </div>
         </div>
-      </div>
+        {/* <!-- end hero section --> */}
 
-      {/* DEVICES PAGE */}
+        {/* <SellerProducts /> */}
+        <Product />
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 p-8  ">
-        <Devices
-          bgColor="#282828"
-          textColor="#ffffff"
-          text="Enjoy"
-          description="With"
-          title="EARPHONE"
-          buttonText="Browse"
-          buttonBgColor="#f42c37"
-          image="https://demo.phlox.pro/shop-digital/wp-content/uploads/sites/127/2019/09/Mask-Group-5-1.png"
-        />
+        {/* //NEWS PAGE */}
+        {/* <!-- blogs --> */}
+        <div className="section">
+          <div className="container">
+            <div className="section-header">
+              <h2>latest blog</h2>
+            </div>
+            <div className="blog">
+              <div className="blog-img">
+                <img src="./images/JBL_Quantum400_Lifestyle1.png" alt="" />
+              </div>
+              <div className="blog-info">
+                <div className="blog-title">
+                  Lorem ipsum dolor sit amet
+                </div>
+                <div className="blog-preview">
+                  Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quasi, eligendi dolore. Sapiente omnis numquam mollitia asperiores animi, veritatis sint illo magnam, voluptatum labore, quam ducimus! Nisi doloremque praesentium laudantium repellat.
+                </div>
+                <button className="btn-flat btn-hover">read more</button>
+              </div>
+            </div>
+            <div className="blog row-revere">
+              <div className="blog-img">
+                <img src="./images/JBL_TUNE220TWS_Lifestyle_black.png" alt="" />
+              </div>
+              <div className="blog-info">
+                <div className="blog-title">
+                  Lorem ipsum dolor sit amet
+                </div>
+                <div className="blog-preview">
+                  Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quasi, eligendi dolore. Sapiente omnis numquam mollitia asperiores animi, veritatis sint illo magnam, voluptatum labore, quam ducimus! Nisi doloremque praesentium laudantium repellat.
+                </div>
+                <button className="btn-flat btn-hover">read more</button>
+              </div>
+            </div>
+            <div className="section-footer">
+              <a href="#" className="btn-flat btn-hover">view all</a>
 
-        <Devices
-          bgColor="#fec62e"
-          textColor="#fed158"
-          text className="New"
-          description="Wear"
-          title="GADGETS"
-          buttonText="Browse"
-          buttonBgColor="#ffffff"
-          image="https://demo.phlox.pro/shop-digital/wp-content/uploads/sites/127/2019/09/clay-apple-watch-mockup-07.png"
-        />
-
-        <Devices
-          bgColor="#f42c37"
-          textColor="#ffffff"
-          text="Trend"
-          description="Devices"
-          title="LAPTOPS"
-          buttonText="Browse"
-          buttonBgColor="#ffffff"
-          image="https://demo.phlox.pro/shop-digital/wp-content/uploads/sites/127/2019/09/Laptop.png"
-        />
-
-        <Devices
-          bgColor="#eeeff1"
-          textColor="#000000"
-          text="Best"
-          description="Gaming"
-          title="CONSOLE"
-          buttonText="Browse"
-          buttonTextColor="#fed158"
-          buttonBgColor="#f42c37"
-          image="https://demo.phlox.pro/shop-digital/wp-content/uploads/sites/127/2019/10/NicePng_ps4-png_193822.png"
-        />
-
-        <Devices
-          bgColor="#1581ff"
-          textColor="#a6d9ff"
-          text="New"
-          description="Amazon"
-          title="SPEAKER"
-          buttonText="Browse"
-          buttonBgColor="#ffffff"
-          image="https://demo.phlox.pro/shop-digital/wp-content/uploads/sites/127/2019/09/P6YUXW1.png"
-        />
-
-        <Devices
-          bgColor="#2dd06f"
-          textColor="#dcf7e7"
-          text="Play"
-          description="Game"
-          title="OCULUS"
-          buttonText="Browse"
-          buttonBgColor="#ffffff"
-          image="https://demo.phlox.pro/shop-digital/wp-content/uploads/sites/127/2019/10/man-wearing-virtual-reality-headset-at-home-D7AYCTV-2.png"
-        />
-
-      </div>
-      {/* SERVICE PAGE */}
-      <div className="flex flex-col sm:flex-row gap-6 w-full sm:justify-around p-4 sm:p-0">
-        <Service
-          image="https://demo.phlox.pro/shop-digital/wp-content/uploads/sites/127/2019/09/noun_delivery_1095359.svg"
-          title="Free Shipping"
-          description="Free Shipping On All Order"
-        />
-        <Service
-          image="https://demo.phlox.pro/shop-digital/wp-content/uploads/sites/127/2019/09/noun_guarantee_952398.svg"
-          title="Money Guarantee"
-          description="30 Day Money Back"
-        />
-        <Service
-          image="https://demo.phlox.pro/shop-digital/wp-content/uploads/sites/127/2019/09/Group-995.svg"
-          title="Online Support 24/7"
-          description="Technical Support 24/7"
-        />
-        <Service
-          image="https://demo.phlox.pro/shop-digital/wp-content/uploads/sites/127/2019/09/noun_Wallet_745515.svg"
-          title="Secure Payment"
-          description="All Cards Accepted"
-        />
-      </div>
-      <Headphones />
-      <SellerProducts />
-      <Watches />
-      {/* //NEWS PAGE */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 p-6  ">
-        <News image="https://demo.phlox.pro/shop-digital/wp-content/uploads/sites/127/2019/10/adult-blur-close-up-267394-1024x573.jpg"
-          date="October 5, 2019"
-          author="Paul"
-          title="HOW to choose perfect gadgets"
-          description="When, while the lovely valley teems with vapour around me, and the meridian sun strikes the upper s ..."
-        />
-        <News image="https://demo.phlox.pro/shop-digital/wp-content/uploads/sites/127/2019/10/daniel-korpai-1074289-unsplash-637x357.jpg"
-          date="October 5, 2019"
-          author="Paul"
-          title="HOW to choose perfect gadgets"
-          description="When, while the lovely valley teems with vapour around me, and the meridian sun strikes the upper s ..."
-        />
-        <News image="https://demo.phlox.pro/shop-digital/wp-content/uploads/sites/127/2019/10/billetto-editorial-334686-unsplash-637x357.jpg"
-          date="October 5, 2019"
-          author="Paul"
-          title="HOW to choose perfect gadgets"
-          description="When, while the lovely valley teems with vapour around me, and the meridian sun strikes the upper s ..."
-        />
-
-      </div>
-      <Clients />
+            </div>
+          </div>
+        </div>
+        {/* <!-- end blogs --> */}
+        <Clients />
 
 
 
 
 
 
-    </>
+      </>
 
-  )
+    )
   }
 }
 

@@ -42,7 +42,6 @@ const ProductDetails = () => {
         setProduct(response.data);
         setTotalPrice(response.data.Price);
         setPrice(response.data.Price);
-        setNameProductCart(response.data.Name);
       } catch (error) {
         console.error('Error fetching product details:', error);
       }
@@ -81,19 +80,15 @@ const ProductDetails = () => {
 
   // handle add to cart
   const handleAddToCart = async () => {
-
-
-
     const data = {
       product_id: id,
       quantity: itemCount,
       price: totalPrice,
-      nameProductCart: product.Name,
     }
     try {
       await axios.post(`${apiDomain}/cart`, data);
       getCartItems();
-      toast.success(`${product.Name} has been added to the cart successfully!`, {
+      toast.success(` Sản phẩm ${product.Name} đã được thêm vào giỏ hàng thành công!`, {
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
@@ -113,11 +108,11 @@ const ProductDetails = () => {
     const starElements = [];
 
     for (let i = 0; i < filledStars; i++) {
-      starElements.push(<span key={`filled-${i}`}>&#9733;</span>);
+      starElements.push(<span key={`filled-${i}`}> <i className='bx bxs-star'></i></span>);
     }
 
     for (let i = 0; i < emptyStars; i++) {
-      starElements.push(<span key={`empty-${i}`}>&#9734;</span>);
+      starElements.push(<span key={`empty-${i}`}> <i className='bx bx-star'></i></span>);
     }
 
     return <div>{starElements}</div>;
@@ -130,18 +125,238 @@ const ProductDetails = () => {
   return (
     <>
       <ToastContainer />
-      <div className='flex flex-col gap-6'>
+      <div className="bg-main">
+        <div className="container">
+          <div className="box">
+            <div className="breadcumb">
+              <Link to="/">home</Link>
+              <span><i className='bx bxs-chevrons-right'></i></span>
+              <Link to="/products">products</Link>
+              <span><i className='bx bxs-chevrons-right'></i></span>
+              <a href="#">{product.Name}</a>
+            </div>
+          </div>
+          <div className="row product-row">
+            <div className="col-5 col-md-4">
+              <div className="product-img" id="product-img">
+                <img src={apiDomain + "/image/" + parseImageLink(product.ImageLink)} alt="" />
+              </div>
+              <div className="box">
+                <div className="product-img-list">
+                  <div className="product-img-item">
+                    <img src={apiDomain + "/image/" + parseImageLink(product.ImageLink)} alt="" />
+                  </div>
+                  <div className="product-img-item">
+                    <img src={apiDomain + "/image/" + parseImageLink(product.ImageLink)} alt="" />
+                  </div>
+                  <div className="product-img-item">
+                    <img src={apiDomain + "/image/" + parseImageLink(product.ImageLink)} alt="" />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="col-7 col-md-8">
+              <div className="product-info">
+                <h1>
+                  {product.Name}
+                </h1>
+                <div className="product-info-detail">
+                  <span className="product-info-detail-title">Brand:</span>
+                  {product.Category}
+                </div>
+                <div className="product-info-detail">
+                  <span className="product-info-detail-title">Rated:</span>
+                  <span className="rating">
+                    <h2 className='text-red-500 gap-6 mb-10'>{renderStars(product.Stars)}</h2>
+                  </span>
+                </div>
+                <p className="product-description">
+                  Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo libero alias officiis dolore doloremque eveniet culpa dignissimos, itaque, cum animi excepturi sed veritatis asperiores soluta, nisi atque quae illum. Ipsum.
+                </p>
+                <div className="product-info-price">{totalPrice}.000 VNĐ</div>
+                <div className="product-quantity-wrapper">
+                  <span className="product-quantity-btn" onClick={handleDeCrease}
+                    disabled={itemCount <= 1}>
+                    <i className='bx bx-minus'></i>
+                  </span>
+                  <span className="product-quantity">{itemCount}</span>
+                  <span className="product-quantity-btn" onClick={handleIncrement}>
+                    <i className='bx bx-plus'></i>
+                  </span>
+                </div>
+                <div>
+                  <button className="btn-flat btn-hover" onClick={() => handleAddToCart(product.ID)}>add to cart</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="box">
+            <div className="box-header">
+              description
+            </div>
+            <div className="product-detail-description">
+              <ReactQuill
+                theme="snow"
+                value={product.Description}
+                readOnly={true}
+                modules={{ toolbar: null }}
+                className="quill-no-border border-none"
+
+              />
+            </div>
+          </div>
+          <div className="box">
+            <div className="box-header">
+              review
+            </div>
+            <div>
+              <div className="user-rate">
+                <div className="user-info">
+                  <div className="user-avt">
+                    <img src="./images/tuat.jpg" alt="" />
+                  </div>
+                  <div className="user-name">
+                    <span className="name">tuat tran anh</span>
+                    <span className="rating">
+                      <i className='bx bxs-star'></i>
+                      <i className='bx bxs-star'></i>
+                      <i className='bx bxs-star'></i>
+                      <i className='bx bxs-star'></i>
+                      <i className='bx bxs-star'></i>
+                    </span>
+                  </div>
+                </div>
+                <div className="user-rate-content">
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio ea iste, veritatis nobis amet illum, cum alias magni dolores odio, eius quo excepturi veniam ipsa voluptatibus natus voluptas vero? Aspernatur!
+                </div>
+              </div>
+              <div className="user-rate">
+                <div className="user-info">
+                  <div className="user-avt">
+                    <img src="./images/tuat.jpg" alt="" />
+                  </div>
+                  <div className="user-name">
+                    <span className="name">tuat tran anh</span>
+                    <span className="rating">
+                      <i className='bx bxs-star'></i>
+                      <i className='bx bxs-star'></i>
+                      <i className='bx bxs-star'></i>
+                      <i className='bx bxs-star'></i>
+                      <i className='bx bxs-star'></i>
+                    </span>
+                  </div>
+                </div>
+                <div className="user-rate-content">
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio ea iste, veritatis nobis amet illum, cum alias magni dolores odio, eius quo excepturi veniam ipsa voluptatibus natus voluptas vero? Aspernatur!
+                </div>
+              </div>
+              <div className="user-rate">
+                <div className="user-info">
+                  <div className="user-avt">
+                    <img src="./images/tuat.jpg" alt="" />
+                  </div>
+                  <div className="user-name">
+                    <span className="name">tuat tran anh</span>
+                    <span className="rating">
+                      <i className='bx bxs-star'></i>
+                      <i className='bx bxs-star'></i>
+                      <i className='bx bxs-star'></i>
+                      <i className='bx bxs-star'></i>
+                      <i className='bx bxs-star'></i>
+                    </span>
+                  </div>
+                </div>
+                <div className="user-rate-content">
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio ea iste, veritatis nobis amet illum, cum alias magni dolores odio, eius quo excepturi veniam ipsa voluptatibus natus voluptas vero? Aspernatur!
+                </div>
+              </div>
+              <div className="user-rate">
+                <div className="user-info">
+                  <div className="user-avt">
+                    <img src="./images/tuat.jpg" alt="" />
+                  </div>
+                  <div className="user-name">
+                    <span className="name">tuat tran anh</span>
+                    <span className="rating">
+                      <i className='bx bxs-star'></i>
+                      <i className='bx bxs-star'></i>
+                      <i className='bx bxs-star'></i>
+                      <i className='bx bxs-star'></i>
+                      <i className='bx bxs-star'></i>
+                    </span>
+                  </div>
+                </div>
+                <div className="user-rate-content">
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio ea iste, veritatis nobis amet illum, cum alias magni dolores odio, eius quo excepturi veniam ipsa voluptatibus natus voluptas vero? Aspernatur!
+                </div>
+              </div>
+              <div className="user-rate">
+                <div className="user-info">
+                  <div className="user-avt">
+                    <img src="./images/tuat.jpg" alt="" />
+                  </div>
+                  <div className="user-name">
+                    <span className="name">tuat tran anh</span>
+                    <span className="rating">
+                      <i className='bx bxs-star'></i>
+                      <i className='bx bxs-star'></i>
+                      <i className='bx bxs-star'></i>
+                      <i className='bx bxs-star'></i>
+                      <i className='bx bxs-star'></i>
+                    </span>
+                  </div>
+                </div>
+                <div className="user-rate-content">
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio ea iste, veritatis nobis amet illum, cum alias magni dolores odio, eius quo excepturi veniam ipsa voluptatibus natus voluptas vero? Aspernatur!
+                </div>
+              </div>
+              <div className="box">
+                <ul className="pagination">
+                  <li><a href="#"><i className='bx bxs-chevron-left'></i></a></li>
+                  <li><a href="#" className="active">1</a></li>
+                  <li><a href="#">2</a></li>
+                  <li><a href="#">3</a></li>
+                  <li><a href="#">4</a></li>
+                  <li><a href="#">5</a></li>
+                  <li><a href="#"><i className='bx bxs-chevron-right'></i></a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div className="box">
+            <div className="box-header">
+              related products
+            </div>
+            <div className="row" id="related-products"></div>
+          </div>
+        </div>
+      </div>
+      {/* <!-- end product-detail content --> */}
+
+
+
+
+
+
+
+
+
+      {/* <div className='flex flex-col gap-6'>
         <div>
           <div className='w-full sm:flex justify-center gap-[3rem] p-[2rem]'>
             <div className=' sm:w-[45%] rounded-lg'>
               <img src={apiDomain + "/image/" + parseImageLink(product.ImageLink)} />
               <div>
-                {/* {product.ImageLink.length > 0 && product.ImageLink.map((image, index) => (
+
+                ////////////////////////
+                 {product.ImageLink.length > 0 && product.ImageLink.map((image, index) => (
 
                   <div key={index} className="m-1 relative" >
                     <img src={apiDomain + "/image/" + image} width={100} height={100} alt={`Ảnh ${index}`} />
                   </div>
-                ))} */}
+                ))} 
+
+                ////////////////
 
               </div>
             </div>
@@ -225,7 +440,7 @@ const ProductDetails = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
     </>
   );
 };

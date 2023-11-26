@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { apiDomain } from "../../utils/utilsDomain";
+import { Link } from "react-router-dom";
 
 const UsersTable = () => {
     const [users, setUsers] = useState([]);
@@ -22,6 +23,18 @@ const UsersTable = () => {
 
     return (
         <div className="container px-4">
+            <div class="mb-4 mt-10 px-4">
+                <nav style={{ "--bs-breadcrumb-divider": ">" }} aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <Link href="">
+                                <i class="bi bi-globe2 small me-2"></i> Dashboard
+                            </Link>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">User</li>
+                    </ol>
+                </nav>
+            </div>
             <h2 className="text-3xl font-bold mb-4">Users List</h2>
             <table className="table-auto w-full border">
                 <thead>
