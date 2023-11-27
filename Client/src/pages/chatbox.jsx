@@ -6,6 +6,8 @@ const ChatComponent = () => {
     const [messages, setMessages] = useState([]);
     const [inputText, setInputText] = useState('');
 
+
+
     const toggleState = () => {
         setState(!state);
 
@@ -129,7 +131,7 @@ const ChatComponent = () => {
                         <div className="chatbox__footer">
                             <input type="text" placeholder="Write a message..." value={inputText}
                                 onChange={(e) => setInputText(e.target.value)} />
-                            <button className="chatbox__send--footer send__button" onClick={onSendButton}>Send</button>
+                            <button className="chatbox__send--footer send__button" >Send</button>
                         </div>
                     </div>
 
@@ -148,4 +150,4 @@ const ChatComponent = () => {
     );
 };
 
-export default ChatComponent;
+export default React.memo(ChatComponent);

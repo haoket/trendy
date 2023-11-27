@@ -24,6 +24,7 @@ const Navbar = () => {
   };
 
 
+
   const user = JSON.parse(localStorage.getItem('user'));
   return (
 
@@ -84,10 +85,10 @@ const Navbar = () => {
             <div className="mid-header container">
               <Link to="/" className="logo">Aura</Link>
               <div className="search">
-                <input type="text" placeholder="Search" onChange={(e) => setItemSearch(e.target.value)} />
-                <Link to={`/products/search=${itemSearch}`}>
+                <input type="text" placeholder="Search here..." onChange={(e) => setItemSearch(e.target.value)} />
+                <a href={`/search/${itemSearch}`} >
                   <button>     <i className='bx bx-search-alt'></i></button>
-                </Link>
+                </a>
 
 
               </div>
@@ -204,8 +205,9 @@ const Navbar = () => {
                   </div> */}
                 </li>
                 {/* <!-- end mega menu --> */}
+                <li><Link to='/about'>Giới thiệu</Link></li>
                 <li><a href="#">blog</a></li>
-                <li><a href="#">contact</a></li>
+                <li><Link to='/contact'>contact</Link></li>
               </ul>
             </div>
           </div>

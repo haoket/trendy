@@ -1,10 +1,8 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { apiDomain } from '../../../utils/utilsDomain';
-import Clients from "../../../shared/Clients";
+
 import { FaSearch, FaCaretDown } from "react-icons/fa";
-import PriceFilter from "../../../shared/Range";
-import { data } from "autoprefixer";
 import { ToastContainer, toast } from 'react-toastify';
 import { getCategory, getProducts } from "../../../utils/apiCalls";
 // import filterProductsByCategory from "./FilterController"; 

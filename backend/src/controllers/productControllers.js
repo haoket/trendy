@@ -174,7 +174,7 @@ export const searchProduct = (req, res) => {
     } else {
       if (results.length === 0) {
 
-        res.status(404).json({ message: 'Sản phẩm không được tìm thấy trong bảng' });
+        res.status(404).json({ message: 'Sản phẩm không được tìm thấy' });
       } else {
         res.status(200).json(results);
       }

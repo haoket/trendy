@@ -1,7 +1,6 @@
 import React from 'react'
 import { FaFacebook, FaInstagram, FaLinkedin, FaTwitter } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
-import Terms from '../Terms'
 
 const Footer = () => {
   return (

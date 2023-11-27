@@ -1,10 +1,3 @@
-import Clients from "../../shared/Clients"
-import Devices from "../../shared/Devices"
-import Headphones from "../../shared/Headphones"
-import News from "../../shared/News"
-
-
-import Watches from "../../shared/Watches"
 import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Product from "../../user/components/product/Product"
@@ -123,8 +116,6 @@ const Home = () => {
 
         {/* <SellerProducts /> */}
         <Product />
-
-        {/* //NEWS PAGE */}
         {/* <!-- blogs --> */}
         <div className="section">
           <div className="container">
@@ -166,7 +157,7 @@ const Home = () => {
           </div>
         </div>
         {/* <!-- end blogs --> */}
-        <Clients />
+
 
 
 

@@ -1,8 +1,6 @@
 import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { apiDomain } from '../../../utils/utilsDomain';
-import { FaSearch, FaCaretDown } from "react-icons/fa";
-import PriceFilter from "../../../shared/Range";
 import { ToastContainer, toast } from 'react-toastify';
 import { getCategory, getProductBySlug } from "../../../utils/apiCalls";
 import axios from 'axios';

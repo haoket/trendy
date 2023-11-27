@@ -1,65 +1,33 @@
 import { Link } from "react-router-dom";
 
 import './Contact.css'
-import Clients from "../../shared/Clients";
-import Service from "../../shared/Service";
 const Contact = () => {
   return (
     <>
-      <div className="bg-[#e2e2e2] w-screen p-16  mb-8 ">
-        <i className="flex flex-col items-center w-full">
-          <Link to="/" className=" text-[#666666]">Home / Contact Us</Link>
-          <h1 className="font-bold text-4xl ">Contact Us</h1>
-        </i>
-      </div>
+      <div>
+        <div class="contact-area d-flex align-items-center mt-5 mb-5">
 
+          <div class="google-map">
+            <div >
+              <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3835.7332975516097!2d108.24978007468239!3d15.975298241946591!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3142108997dc971f%3A0x1295cb3d313469c9!2zVHLGsOG7nW5nIMSQ4bqhaSBo4buNYyBDw7RuZyBuZ2jhu4cgVGjDtG5nIHRpbiB2w6AgVHJ1eeG7gW4gdGjDtG5nIFZp4buHdCAtIEjDoG4!5e0!3m2!1svi!2s!4v1701016608794!5m2!1svi!2s"
+                id="googleMap" style={{ border: 0 }} allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+          </div>
 
-      <div className="main_contact">
-        <div className="map mb-5">
-          <iframe className="bg-white rounded "
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3997.2206226128244!2d34.75716801427406!3d-0.08665449921950933!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182a58aece8e9003%3A0xd7416e62f9f3ef1e!2sKisumu%2C%20Kenya!5e0!3m2!1sen!2snp!4v1648541159647!5m2!1sen!2snp"
-            width="100%"
-            height="550"
-            style={{ border: 0 }}
-            allowFullScreen=""
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-            title="Rental Location Map"
-          ></iframe>
+          <div class="contact-info">
+            <h2>Liên hệ với chúng tôi</h2>
+            <p>Chúng tôi hân hạnh đem đến cho khách hàng những sản phẩm chất lượng nhất, cửa hàng chúng tôi luôn đặt uy tín lên hàng đầu.</p>
+
+            <div class="contact-address mt-50">
+              <p><span>Địa chỉ:</span> Hòa Khánh, thành phố Đà Nẵng</p>
+              <p><span>SĐT:</span> 0386043213</p>
+              <p><a href="mailto:contact@essence.com">levanhao0304@gmail.com</a></p>
+            </div>
+          </div>
+
         </div>
-        <div className="contact_form">
-          <form >
-            <h1>Get In Touch</h1>
-            <input type="text" name="name" placeholder="Name" />
-            <input type="email" name="email" placeholder="Email" /><br />
-            <textarea placeholder="Message"></textarea>
-            <Link to="#">
-              <button className="bg-[#f42c37] text-white px-6 py-2 rounded-[20px]">Submit</button>
-            </Link>
-          </form>
-        </div>
-      </div>
-      {/* SERVICE PAGE */}
-      <div className="flex gap-6 w-full justify-around mb-24 mt-14 ">
-        <Service
-          image="https://demo.phlox.pro/shop-digital/wp-content/uploads/sites/127/2019/09/noun_Email_254038.svg"
-          title="Email: Info@yourdomain.com"
-          description="info@samplemail.com"
-        />
-        <Service
-          image="https://demo.phlox.pro/shop-digital/wp-content/uploads/sites/127/2019/09/noun_Phone_17950751.svg"
-          title="Phone: +99 (0) 101 0000 888"
-          description="+99 (0) 101 0000 888"
-        />
-        <Service
-          image="https://demo.phlox.pro/shop-digital/wp-content/uploads/sites/127/2019/10/noun_Location_19355641.svg"
-          title="Address : Judicious M. 4401 Kirinyaga"
-          description="Street Grapevine Nashville, Tx 76051"
-        />
 
-      </div>
-      <Clients />
-    </>
+      </div> </>
   );
 };
 

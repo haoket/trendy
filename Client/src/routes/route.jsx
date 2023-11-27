@@ -8,14 +8,12 @@ import Home from "../pages/home/Home";
 import Cart from "../user/components/cart/Cart";
 import ProductList from "../user/components/product/ProductList";
 import Contact from "../pages/contact/Contact";
-import Blog from "../pages/blog/Blog";
 import ProductDetails from "../user/components/product/ProductDetails";
 import { Dashboard } from "../admin/components/Dashboard";
 import About from "../pages/about/About";
 import UpdateProductForm from "../admin/components/UpdateProduct";
 import ProductsTable from "../admin/components/ProductsTable";
 import UsersTable from "../admin/components/UsersTable";
-import CheckoutPage from "../user/components/checkout/Checkout";
 import CreatePoductForm from "../admin/components/CreateProduct";
 import OrdersTable from "../admin/components/OrdersTable";
 import Category from "../admin/components/Category";
@@ -37,15 +35,14 @@ export const router = createBrowserRouter(
             <Route path="" element={<UserLayout />}>
                 <Route path="" element={<Home />} />
                 <Route path="/contact" element={<Contact />} />
-                <Route path="/blog" element={<Blog />} />
                 <Route path="/about" element={<About />} />
                 <Route path="products" element={<ProductList />} />
                 <Route path="product/:id" element={<ProductDetails />} />
                 <Route path="cart" element={<Cart />} />
-                <Route path="checkout" element={<CheckoutPage />} />
                 <Route path="products/:slug" element={<ProductCategories />} />
-                <Route path="products/search=:slug" element={<ProductSearchPage />} />
+                <Route path="search/:name" element={<ProductSearchPage />} />
                 <Route path="/create-order" element={<Order />} />
+                <Route path="/contact/" element={<Contact />} />
                 <Route path="/profile/" element={<Profile />}>
                     <Route index element={<OrderWaiting />} />
                     <Route path="order-success" element={<OrderSuccess />} />

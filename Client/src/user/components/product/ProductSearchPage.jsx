@@ -1,52 +1,176 @@
 import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { apiDomain } from '../../../utils/utilsDomain';
 
-
+import { ToastContainer, toast } from 'react-toastify';
+import { getCategory, getProductBySlug } from "../../../utils/apiCalls";
 import axios from 'axios';
 //Lấy danh sách sản phẩm
 const ProductSearchPage = () => {
+  const { name } = useParams();
+  const [data, setData] = useState([]);
+  const [dataProduct, setDataProduct] = useState([]);
+  const [tempDataProduct, setTempDataProduct] = useState([]);
+  //lấy data product by category
+  const parseImageLink = (imageLink) => {
 
-    const { slug } = useParams();
-    console.log('====================================');
-    console.log(slug);
-    console.log('====================================');
-    const handleSearch = async () => {
-        try {
-            const response = await axios.get(`${slug}`);
-            setCartItems(response.data);
-        } catch (error) {
-            console.error('Error fetching product details:', error);
-        }
+    try {
+      const imageArray = JSON.parse(imageLink);
+      if (Array.isArray(imageArray) && imageArray.length > 0) {
+        return imageArray[0];
+      }
+    } catch (error) {
+      console.error('Error parsing ImageLink:', error);
+    }
+    return null;
+  };
 
+  const getProductBySearch = async () => {
+    try {
+      const data = await axios.get(`${apiDomain}/search=${name}`);
+      if (data) {
+        setDataProduct(Object.values(data)[0]);
+      } else {
+        setDataProduct([]);
+      }
+
+      console.log('====================================');
+      console.log("response", dataProduct);
+      console.log('====================================');
+    } catch (error) {
+      console.error('Error fetching product details:', error);
     }
 
+  };
+  useEffect(() => {
+    getProductBySearch();
+    fetchCategory();
 
 
 
-    useEffect(() => {
-
-        handleSearch();
+  }, [name]);
 
 
 
-    }, [slug]);
+  // lấy danh sách danh mục
+  const fetchCategory = async () => {
+    try {
+      const result = await getCategory();
+      if (Array.isArray(result)) {
+        setData(result);
+      } else {
+        console.error("Invalid data returned from search");
+      }
+    } catch (error) {
+      console.error("Error fetching category:", error);
+    }
+  };
+
+
+  return (
+    <>
+
+      {/* <!-- products content --> */}
+      <div className="bg-main">
+        <div className="container">
+          <div className="box flex items-center justify-center ">
+            <div className="breadcumb text-xl">
+              Kết quả tìm kiếm cho '{name}'
+            </div>
+          </div>
+          <div className="box">
+            <div className="row">
+              <div className="col-3 filter-col" id="filter-col">
+                <div className="box">
+                  <span className="filter-header">
+                    Categories
+                  </span>
+
+
+                  {data.length > 0 && data.map((item, index) => (
+                    <ul key={index} className="filter-list text-[#7f7f7f] mx-5 mb-3 tracking-wide">
+                      <li className="hover:text-[#f42c37] pl-10  cursor-pointer hover:font-bold"  >
+                        <Link to={`/products/${item.slug}`} >
+                          {item.Name}
+                        </Link>
+
+                      </li>
+                    </ul>
+                  ))}
+
+                </div>
+              </div>
+              <div className="col-9 col-md-9">
+
+                <div className="box">
+                  <div className="row" id="products">
+
+                    <div className="container">
+                      <div className="row" id="latest-products">
+                        {dataProduct.map((product, index) => (
+                          <div className="col-3 col-md-3 col-sm-12" key={index}>
+                            <div className="product-card">
+                              <div className="product-card-img">
+                                <img src={apiDomain + "/image/" + parseImageLink(product.ImageLink)} alt="" />
+                                <img src={apiDomain + "/image/" + parseImageLink(product.ImageLink)} alt="" />
+                              </div>
+                              <div className="product-card-info">
+                                <div className="product-btn">
+                                  <Link to={`/product/${product.ID}`}>
+                                    <button className="btn-flat btn-hover btn-shop-now">Chi tiết</button>
+                                  </Link>
+                                  <button className="btn-flat btn-hover btn-cart-add">
+                                    <i className='bx bxs-cart-add'></i>
+                                  </button>
+
+                                </div>
+                                <div className="product-card-name">
+                                  {product.Name}
+                                </div>
+                                <div className="product-card-price">
+                                  {/* <span><del>300</del></span> */}
+                                  <span className="curr-price">{product.Price}.000 VNĐ</span>
+                                </div>
+                              </div>
+                            </div>
+
+                          </div>
+                        ))}
+
+                        {dataProduct.length === 0 && (
+                          <p>Không có sản phẩm nào được tìm thấy!</p>
+                        )}
+
+                      </div>
+                    </div>
+
+                  </div>
+
+                </div>
+                <div className="box">
+                  <ul className="pagination">
+                    <li><a href="#"><i className='bx bxs-chevron-left'></i></a></li>
+                    <li><a href="#" className="active">1</a></li>
+                    <li><a href="#">2</a></li>
+                    <li><a href="#">3</a></li>
+                    <li><a href="#">4</a></li>
+                    <li><a href="#">5</a></li>
+                    <li><a href="#"><i className='bx bxs-chevron-right'></i></a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* <!-- end products content --> */}
 
 
 
 
 
-    return (
-        <>
 
-
-            {/* <!-- end products content --> */}
-
-
-
-
-
-
-            {/* 
+      {/* 
       <div className="sm:flex" >
         <div>
           <div className="flex bg-[#ededed] p-3 rounded-[50px] m-6 ">
@@ -150,8 +274,8 @@ const ProductSearchPage = () => {
 
 
 
-        </>
-    );
+    </>
+  );
 };
 
 export default ProductSearchPage;

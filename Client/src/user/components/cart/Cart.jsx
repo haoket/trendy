@@ -3,12 +3,10 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { apiDomain } from "../../../utils/utilsDomain";
-import { FaTrash } from "react-icons/fa";
 import CartFallback from "./FallBack";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Context } from "../../../context/Context";
-import Payment from "../payment/Payment";
 import '../../../css/cart/bootstrap.css'
 import '../../../css/cart/responsive.css'
 import '../../../css/cart/ui.css'
