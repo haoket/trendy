@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Box } from "./Box";
-import ProductsTable from "./ProductsTable";
-import CreatePoductForm from "./CreateProduct";
+
+import ProductsTable from "./products/ProductsTable";
+import CreatePoductForm from "./products/CreateProduct";
 import '../../admin/css/app.css'
 
 export const Dashboard = () => {

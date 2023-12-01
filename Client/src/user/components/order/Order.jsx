@@ -40,9 +40,6 @@ export const Order = () => {
         const idPayment = await axios.post(`${apiDomain}/create-order`, dataOder);
         const id = idPayment.data;
         for (const item of cartItems) {
-            console.log('====================================');
-            console.log("item", item);
-            console.log('====================================');
             const data = {
                 ProductID: item.ID,
                 OrderID: id,
@@ -134,6 +131,7 @@ export const Order = () => {
 
             <p>Số điện thoại nhận hàng</p>
             <input type="text" className='border border-gray rounded-md w-2/3 px-2 py-1' onChange={(e) => setPhone(e.target.value)} />
+
             <p>Địa chỉ nhận hàng</p>
             <input type="text" onChange={(e) => setAddress(e.target.value)} className='border border-gray rounded-md w-2/3 px-2 py-1' />
             <table className='mt-4 '>

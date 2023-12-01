@@ -3,6 +3,7 @@ import { Link, Outlet, useLocation } from 'react-router-dom';
 import { uploadImage, updateImage } from '../../../utils/apiCalls';
 import { apiDomain } from '../../../utils/utilsDomain';
 import { Context } from '../../../context/Context';
+import Loading from '../amination/Loading';
 
 export const Profile = () => {
     const [selectedImages, setSelectedImages] = useState('');
@@ -11,6 +12,13 @@ export const Profile = () => {
     const user = JSON.parse(localStorage.getItem('user'));
     const { dispatch } = useContext(Context);
     const userId = user.id;
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        setTimeout(() => {
+            setLoading(false); // Thay đổi trạng thái loading thành false sau 2 giờ
+        }, 2000);
+    })
 
     let subpage = pathname.split('/')?.[2];
     if (subpage === undefined) {
@@ -104,7 +112,11 @@ export const Profile = () => {
                     <div className={`${linkClasses('order-success')} font-bold text-xl`} ><Link to="order-success">Đơn đã giao</Link></div>
                     <div className={`${linkClasses('order-cancel')} font-bold text-xl`}><Link to='order-cancel'>Đơn đã hủy</Link></div>
                 </div>
-                <Outlet />
+                {loading ? (
+                    <Loading />
+                ) : (
+                    <Outlet />
+                )}
             </div>
         </div>
     )

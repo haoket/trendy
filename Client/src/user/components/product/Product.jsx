@@ -4,7 +4,7 @@ import axios from 'axios';
 import { apiDomain } from '../../../utils/utilsDomain';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { getProducts } from '../../../utils/apiCalls';
+import { getBlog, getProducts } from '../../../utils/apiCalls';
 
 
 
@@ -12,14 +12,14 @@ import { getProducts } from '../../../utils/apiCalls';
 const Product = () => {
   const [data, setData] = useState([]);
   const [cartItems, setCartItems] = useState([]);
-  const numberOfProducts = 20;
+  const numberOfProducts = 4;
   const displayedProducts = data.slice(0, numberOfProducts);
 
 
 
   const fetchProducts = async () => {
     const data = await getProducts();
-    setData(data);
+    setData(data.slice(0, numberOfProducts));
 
   };
   const parseImageLink = (imageLink) => {
@@ -37,6 +37,7 @@ const Product = () => {
 
   useEffect(() => {
     fetchProducts();
+
   }, []);
   return (
     <>
@@ -44,12 +45,12 @@ const Product = () => {
       {/* <!-- product list --> */}
       <div className="section">
         <div className="container">
-          <div className="section-header">
-            <h2>Latest product</h2>
+          <div className="section-header ">
+            <h2>Sản phẩm mới</h2>
           </div>
           <div className="row" id="latest-products">
             {data.map((product, index) => (
-              <div className="col-3 col-md-3 col-sm-9" key={index}>
+              <div className="col-12 col-md-3 col-sm-9" key={index}>
                 <div className="product-card">
                   <div className="product-card-img">
                     <img src={apiDomain + "/image/" + parseImageLink(product.ImageLink)} alt="" />
@@ -82,7 +83,7 @@ const Product = () => {
           <div className="section-footer">
 
             <Link to="/products" className="btn-flat btn-hover">
-              view all
+              Xem tất cả
             </Link>
           </div>
         </div>

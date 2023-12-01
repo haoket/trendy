@@ -8,11 +8,12 @@ export const createProduct = (req, res) => {
   console.log("req", req.body);
   console.log('====================================');
   const { Name, Description, Price, Quantity, Category, Stars, ImageLink } = req.body;
+  const currentDate = new Date();
   const imageLinkJSON = JSON.stringify(ImageLink);
 
-  const query = 'INSERT INTO Products (Name, Description, Price, Quantity, Category, Stars, ImageLink) VALUES (?, ?, ?,?, ?, ?, ?)';
+  const query = 'INSERT INTO Products (Name, Description, Price, Quantity, Category, Stars, ImageLink, date_create) VALUES (?, ?, ?,?, ?, ?, ?,?)';
 
-  dbConnection.query(query, [Name, Description, Price, Quantity, Category, Stars, imageLinkJSON], (error) => {
+  dbConnection.query(query, [Name, Description, Price, Quantity, Category, Stars, imageLinkJSON, currentDate], (error) => {
     if (error) {
       console.error('Lỗi khi tạo sản phẩm:', error);
       res.status(500).json({ error: 'Lỗi khi tạo sản phẩm' });
@@ -62,22 +63,6 @@ export const getProductById = (req, res) => {
   });
 };
 
-export const getAllProduct = (req, res) => {
-  const productId = req.params.id;
-  const query = 'SELECT * FROM Products';
-  dbConnection.query(query, [productId], (error, results) => {
-    if (error) {
-      console.error('Lỗi khi lấy thông tin sản phẩm:', error);
-      res.status(500).json({ error: 'Lỗi khi lấy thông tin sản phẩm' });
-    } else {
-      if (results.length === 0) {
-        res.status(404).json({ message: 'Sản phẩm không được tìm thấyaâa' });
-      } else {
-        res.status(200).json(results[0]);
-      }
-    }
-  });
-};
 export const getProductsByCategory = async (req, res) => {
   const productSlug = req.params.slug;
 
@@ -130,7 +115,7 @@ export const deleteProduct = (req, res) => {
   });
 };
 export const getProducts = (req, res) => {
-  const query = 'SELECT * FROM Products';
+  const query = 'SELECT * FROM Products ORDER BY date_create DESC';
   dbConnection.query(query, (error, results) => {
     if (error) {
       console.error('Lỗi khi lấy danh sách sản phẩm:', error);
@@ -182,3 +167,26 @@ export const searchProduct = (req, res) => {
   });
 };
 
+export const getProductsPriceDesc = (req, res) => {
+  const query = 'SELECT * FROM Products ORDER BY Price DESC';
+  dbConnection.query(query, (error, results) => {
+    if (error) {
+      console.error('Lỗi khi lấy danh sách sản phẩm:', error);
+      res.status(500).json({ error: 'Lỗi khi lấy danh sách sản phẩm' });
+    } else {
+      res.status(200).json(results);
+    }
+  });
+};
+
+export const getProductsPriceAsc = (req, res) => {
+  const query = 'SELECT * FROM Products ORDER BY Price ASC';
+  dbConnection.query(query, (error, results) => {
+    if (error) {
+      console.error('Lỗi khi lấy danh sách sản phẩm:', error);
+      res.status(500).json({ error: 'Lỗi khi lấy danh sách sản phẩm' });
+    } else {
+      res.status(200).json(results);
+    }
+  });
+};

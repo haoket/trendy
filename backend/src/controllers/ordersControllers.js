@@ -19,6 +19,18 @@ export const createOrder = async (req, res) => {
     }
 
   });
+  dbConnection.query(query, [CustomerID, name, TotalAmount, address, email, method_payment, message, phone, date_create], (error, results) => {
+    if (error) {
+      console.error('Lỗi khi tạo sản phẩm:', error);
+      res.status(500).json({ error: 'Lỗi khi tạo đơn hàng' });
+    } else {
+      res.status(201).json(results.insertId);
+
+    }
+
+  });
+
+
 };
 export const createOrderItem = async (req, res) => {
   const { ProductID, OrderID, Quantity, Price } = req.body;

@@ -24,3 +24,11 @@ const config = {
 };
 
 export default config;
+
+
+
+
+export const vnp_TmnCode = 'CGXZLS0Z';
+export const vnp_HashSecret = 'XNBCJFAKAZQSGTARRLGCHVZWCIOIGSHN';
+export const vnp_Url = 'http://sandbox.vnpayment.vn/paymentv2/vpcpay.html';
+export const vnp_ReturnUrl = 'http://127.0.0.1:5173/blog';

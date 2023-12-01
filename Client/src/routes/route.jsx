@@ -11,12 +11,12 @@ import Contact from "../pages/contact/Contact";
 import ProductDetails from "../user/components/product/ProductDetails";
 import { Dashboard } from "../admin/components/Dashboard";
 import About from "../pages/about/About";
-import UpdateProductForm from "../admin/components/UpdateProduct";
-import ProductsTable from "../admin/components/ProductsTable";
-import UsersTable from "../admin/components/UsersTable";
-import CreatePoductForm from "../admin/components/CreateProduct";
-import OrdersTable from "../admin/components/OrdersTable";
-import Category from "../admin/components/Category";
+import UpdateProductForm from "../admin/components/products/UpdateProduct";
+import ProductsTable from "../admin/components/products/ProductsTable";
+import UsersTable from "../admin/components/userAccount/UsersTable";
+import CreatePoductForm from "../admin/components/products/CreateProduct";
+import OrdersTable from "../admin/components/order/OrdersTable";
+import Category from "../admin/components/category/Category";
 import ProductCategories from "../user/components/product/ProductCategories";
 import { Order } from "../user/components/order/Order";
 import { Profile } from "../user/components/profile/Profile";
@@ -25,6 +25,12 @@ import { OrderWaiting } from "../user/components/order/OrderWaiting";
 import { OrderShiping } from "../user/components/order/OrderShiping";
 import { OrderCancel } from "../user/components/order/OrderCancel";
 import ProductSearchPage from "../user/components/product/ProductSearchPage";
+import BlogTable from "../admin/components/blog/BlogTable";
+import { CreateBlog } from "../admin/components/blog/CreateBlog";
+import { UpdateBlog } from "../admin/components/blog/UpdateBlog";
+import Blog from "../pages/blog/Blog";
+import BlogDetail from "../pages/blog/BlogDetail";
+
 
 
 export const router = createBrowserRouter(
@@ -43,6 +49,8 @@ export const router = createBrowserRouter(
                 <Route path="search/:name" element={<ProductSearchPage />} />
                 <Route path="/create-order" element={<Order />} />
                 <Route path="/contact/" element={<Contact />} />
+                <Route path="/blog" element={<Blog />} />
+                <Route path="/blog/:slug" element={<BlogDetail />} />
                 <Route path="/profile/" element={<Profile />}>
                     <Route index element={<OrderWaiting />} />
                     <Route path="order-success" element={<OrderSuccess />} />
@@ -58,7 +66,10 @@ export const router = createBrowserRouter(
                 <Route path="createproduct" element={<CreatePoductForm />} />
                 <Route path="category" element={<Category />} />
                 <Route path="orders" element={<OrdersTable />} />
+                <Route path="blog" element={<BlogTable />} />
+                <Route path="create-blog" element={<CreateBlog />} />
                 <Route path="update/:product_id" element={<UpdateProductForm />} />
+                <Route path="updateBlog/:blog_id" element={<UpdateBlog />} />
                 <Route path="more/:product_id" element={<ProductDetails />} />
             </Route>
             {/* AUTH ROUTES */}

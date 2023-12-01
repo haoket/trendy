@@ -2,13 +2,14 @@ import express from 'express';
 import {
   getProducts,
   getProductById,
-  getAllProduct,
   createProduct,
   updateProduct,
   deleteProduct,
   uploadImage,
   getProductsByCategory,
   searchProduct,
+  getProductsPriceDesc,
+  getProductsPriceAsc
 } from '../controllers/productControllers.js';
 import fs from 'fs';
 import path from 'path';
@@ -62,8 +63,12 @@ const productRoutes = (app) => {
 
   app.route('/search=:name')
     .get(searchProduct);
-  // app.route('/products/')
-  //   .get(getAllProduct);
+
+
+  app.route('/getProductsPriceDesc')
+    .get(getProductsPriceDesc);
+  app.route('/getProductsPriceAsc')
+    .get(getProductsPriceAsc);
 
 };
 

@@ -77,13 +77,13 @@ export const Sidebar = () => {
                 <span>Customers</span>
               </Link>
             </li>
-            <li className={selectedItem === 'Invoices' ? 'selected' : ''}>
-              <a href="#" onClick={() => handleItemClick('Invoices')}>
+            <li className={selectedItem === 'blog' ? 'selected' : ''}>
+              <Link to='/admin/blog' onClick={() => handleItemClick('blog')}>
                 <span class="nav-link-icon">
                   <i class="bi bi-receipt"></i>
                 </span>
-                <span>Invoices</span>
-              </a>
+                <span>Blog</span>
+              </Link>
 
             </li>
 

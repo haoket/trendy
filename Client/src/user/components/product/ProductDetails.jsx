@@ -15,18 +15,14 @@ const ProductDetails = () => {
   const { setCartItems } = useContext(Context);
   const [totalPrice, setTotalPrice] = useState();
   const [price, setPrice] = useState();
+  const [listImg, setListImg] = useState([]);
 
 
-
-
-
-
-  // lấy hình ảnh đầu tiên của mảng 
   const parseImageLink = (imageLink) => {
     try {
       const imageArray = JSON.parse(imageLink);
       if (Array.isArray(imageArray) && imageArray.length > 0) {
-        return imageArray[0];
+        return imageArray;
       }
     } catch (error) {
       console.error('Error parsing ImageLink:', error);
@@ -35,17 +31,25 @@ const ProductDetails = () => {
   };
 
 
+
+  // lấy hình ảnh đầu tiên của mảng 
+
+
+  const fetchProductDetails = async () => {
+    try {
+      const response = await axios.get(`${apiDomain}/products/${id}`);
+      setProduct(response.data);
+      setTotalPrice(response.data.Price);
+      setPrice(response.data.Price);
+      setListImg(parseImageLink(response.data.ImageLink));
+    } catch (error) {
+      console.error('Error fetching product details:', error);
+    }
+
+  };
+
   useEffect(() => {
-    const fetchProductDetails = async () => {
-      try {
-        const response = await axios.get(`${apiDomain}/products/${id}`);
-        setProduct(response.data);
-        setTotalPrice(response.data.Price);
-        setPrice(response.data.Price);
-      } catch (error) {
-        console.error('Error fetching product details:', error);
-      }
-    };
+
 
     fetchProductDetails();
   }, [])
@@ -139,18 +143,18 @@ const ProductDetails = () => {
           <div className="row product-row">
             <div className="col-5 col-md-4">
               <div className="product-img" id="product-img">
-                <img src={apiDomain + "/image/" + parseImageLink(product.ImageLink)} alt="" />
+                <img src={apiDomain + "/image/" + listImg[0]} alt="" />
               </div>
               <div className="box">
                 <div className="product-img-list">
                   <div className="product-img-item">
-                    <img src={apiDomain + "/image/" + parseImageLink(product.ImageLink)} alt="" />
+                    <img src={apiDomain + "/image/" + listImg[1]} alt="" />
                   </div>
                   <div className="product-img-item">
-                    <img src={apiDomain + "/image/" + parseImageLink(product.ImageLink)} alt="" />
+                    <img src={apiDomain + "/image/" + listImg[2]} alt="" />
                   </div>
                   <div className="product-img-item">
-                    <img src={apiDomain + "/image/" + parseImageLink(product.ImageLink)} alt="" />
+                    <img src={apiDomain + "/image/" + listImg[3]} alt="" />
                   </div>
                 </div>
               </div>

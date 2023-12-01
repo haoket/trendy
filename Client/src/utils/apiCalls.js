@@ -40,6 +40,17 @@ export const createCategory = async (categories) => {
     console.error(error);
   }
 };
+export const createBlog = async (blog) => {
+  try {
+    // axios request
+    const { data } = await axios.post(apiDomain + "/create-blog", blog);
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+
 
 
 // UPDATE
@@ -132,16 +143,72 @@ export const getCategory = async () => {
     console.error(error);
   }
 };
+export const getProductsPriceDesc = async () => {
+  try {
+    // axios request
+    const { data } = await axios.get(apiDomain + "/getProductsPriceDesc");
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+export const getProductsPriceAsc = async () => {
+  try {
+    // axios request
+    const { data } = await axios.get(apiDomain + "/getProductsPriceAsc");
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 
-// //USERS
-// //GETPRODUCT
-// export const getUsers = async () => {
-//   try {
-//     // axios request
-//     const { users} = await axios.get(apiDomain + "/users");
-//     return users;
-//   } catch (error) {
-//     console.error(error);
-//   }
-// };
+
+
+
+///GET BLOG
+
+export const getBlog = async () => {
+  try {
+    // axios request
+    const { data } = await axios.get(apiDomain + "/blog");
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+///DELETE BLOG
+export const deleteBlog = async (blogID) => {
+  try {
+    // axios request
+    const { data } = await axios.delete(apiDomain + "/delete-blog/" + blogID);
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+
+export const updateBlog = async (updatedBlog, blogID) => {
+  try {
+    // axios request
+    const { data } = await axios.put(
+      apiDomain + "/update-blog/" + blogID,
+      updatedBlog
+    );
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const getBlogById = async (blogID) => {
+  try {
+    // axios request
+    const { data } = await axios.get(apiDomain + "/getBlogById/" + blogID);
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+};
