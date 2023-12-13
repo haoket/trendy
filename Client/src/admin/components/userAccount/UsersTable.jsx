@@ -23,15 +23,15 @@ const UsersTable = () => {
 
     return (
         <div className="container px-4">
-            <div class="mb-4 mt-10 px-4">
+            <div className="mb-4 mt-10 px-4">
                 <nav style={{ "--bs-breadcrumb-divider": ">" }} aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item">
+                    <ol className="breadcrumb">
+                        <li className="breadcrumb-item">
                             <Link href="">
-                                <i class="bi bi-globe2 small me-2"></i> Dashboard
+                                <i className="bi bi-globe2 small me-2"></i> Dashboard
                             </Link>
                         </li>
-                        <li class="breadcrumb-item active" aria-current="page">User</li>
+                        <li className="breadcrumb-item active" aria-current="page">User</li>
                     </ol>
                 </nav>
             </div>

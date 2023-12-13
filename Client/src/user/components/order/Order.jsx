@@ -6,6 +6,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Context } from "../../../context/Context";
 import { Navigate, useNavigate } from 'react-router-dom';
+import { PayPalButton } from "react-paypal-button-v2";
 export const Order = () => {
 
     const [cartItems, setCartItems] = useState([]);
@@ -19,6 +20,11 @@ export const Order = () => {
     const [message, setMessage] = useState('');
     const [name, setName] = useState('');
     const date_create = new Date();
+    const [sdkReady, setSdkReady] = useState(false);
+    const [isPaid, setIsPaid] = useState(0);
+    const [date_payment, setDate_payment] = useState('');
+
+
     const navigate = useNavigate();
 
 
@@ -32,45 +38,73 @@ export const Order = () => {
         message: message,
         phone: phone,
         date_create: date_create,
+        isPaid: isPaid,
+        date_payment: date_payment
 
     }
 
+    const onSuccess = (paymentResult) => {
+
+        if (paymentResult.status === "COMPLETED") {
+            setDate_payment(paymentResult.create_time);
+            setIsPaid(1);
+            createOrder();
+        }
+    }
+
+    const MemoizedPayPalButton = React.memo(() => (
+        <PayPalButton
+            amount={totalPrice}
+            onSuccess={onSuccess}
+        />
+    ));
 
     const createOrder = async () => {
-        const idPayment = await axios.post(`${apiDomain}/create-order`, dataOder);
-        const id = idPayment.data;
-        for (const item of cartItems) {
-            const data = {
-                ProductID: item.ID,
-                OrderID: id,
-                Price: item.price,
-                Quantity: item.quantity,
+        try {
+            const idPayment = await axios.post(`${apiDomain}/create-order`, dataOder);
+            const id = idPayment.data;
+
+            for (const item of cartItems) {
+                const data = {
+                    ProductID: item.ID,
+                    OrderID: id,
+                    Price: item.price,
+                    Quantity: item.quantity,
+                }
+
+                await axios.post(`${apiDomain}/create-order-item`, data);
             }
 
-            await axios.post(`${apiDomain}/create-order-item`, data);
+            toast.success(`Đặt hàng thành công`, {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
 
+            await axios.delete(`${apiDomain}/delete-cart`);
+            setCartItems([]);
+
+            setTimeout(() => {
+                navigate("/profile"); // Chuyển hướng sau 2 giây
+            }, 2000);
+        } catch (error) {
+            console.error('Lỗi khi đặt hàng:', error);
+            // Hiển thị thông báo lỗi cho người dùng
+            toast.error('Có lỗi xảy ra khi đặt hàng', {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
         }
-        toast.success(`Đặt hàng thành công`, {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-        });
-
-        await axios.delete(`${apiDomain}/delete-cart`);
-        setCartItems([]);
-
-        setTimeout(() => {
-            navigate("/profile"); // Chuyển hướng sau 2 giây
-        }, 2000);
-
-
-
-
-    }
+    };
     //lấy hình ảnh đầu tiên của mảng
     const parseImageLink = (imageLink) => {
 
@@ -109,6 +143,10 @@ export const Order = () => {
 
     }, [isLoading]);
 
+
+
+
+
     // tính toán tổng tiền
     const calculateTotalPrice = () => {
         if (!isLoading) { // Kiểm tra nếu dữ liệu đã sẵn sàng
@@ -119,6 +157,30 @@ export const Order = () => {
             setTotalPrice(totalPrice);
         }
     };
+    const addPaypalScript = async () => {
+        const { data } = await axios.get(`${apiDomain}/payment/config`);
+        console.log('====================================');
+        console.log(data);
+        console.log('====================================');
+        const script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = `https://www.paypal.com/sdk/js?client-id=${data.data}`;
+        script.async = true;
+        script.onload = () => {
+            setSdkReady(true);
+
+        }
+        document.body.appendChild(script);
+
+    }
+
+    useEffect(() => {
+        if (!window.paypal) {
+            addPaypalScript();
+        } else {
+            setSdkReady(true);
+        }
+    })
 
     return (
 
@@ -166,12 +228,17 @@ export const Order = () => {
             <div><p className='font-bold text-xl'>Phương thức thanh toán</p></div>
             <select name="method_payment" onChange={(e) => setMethod_payment(e.target.value)} className='border border-gray rounded-md w-1/5 px-2 py-1 mt-4 mb-4'>
                 <option value="COD">COD</option>
-                <option value="MOMO">MOMO</option>
-                <option value="ZALO">ZALO</option>
+                <option value="paypal">PayPal</option>
+
             </select>
 
+            {method_payment === "paypal" && sdkReady ? (
+                <MemoizedPayPalButton />
+            ) : (
+                <button onClick={createOrder} className='bg-red-500 w-80 hover:bg-red-700 text-white px-8 py-3 text-[#666666] rounded-1xl cursor-pointer' >Đặt hàng</button>
+            )}
 
-            <button onClick={createOrder} className='bg-red-500 w-80 hover:bg-red-700 text-white px-8 py-3 text-[#666666] rounded-1xl cursor-pointer' >Đặt hàng</button>
+
 
 
         </div>

@@ -1,21 +1,10 @@
 import mysql from 'mysql';
 import createDatabaseConnection from '../config/database.js';
+
+import bcrypt from 'bcrypt';
+
 const dbConnection = createDatabaseConnection();
 
-// Get all users
-// export const getUsers = async (req, res) => {
-//   try {
-//     const result = await dbConnection.query('SELECT * FROM Users');
-//     if (!result || !result.length) {
-//       res.status(404).json({ message: 'Users not found' });
-//     } else {
-//       res.status(200).json(result);
-//     }
-//   } catch (error) {
-//     console.log(error);
-//     res.status(500).json({ error: `An error occurred while retrieving users... ${error.message}` });
-//   }
-// };
 
 export const getUsers = (req, res) => {
   const query = 'SELECT * FROM Users';
@@ -36,19 +25,16 @@ export const getUsers = (req, res) => {
 // Get a specific user by ID
 export const getUserById = async (req, res) => {
   const userId = req.params.id;
+  const query = 'SELECT * FROM Users Where id = ?';
 
-  try {
-    const result = await dbConnection.query('SELECT * FROM Users WHERE id = ?', [userId]);
-
-    if (!result || !result.length) {
-      res.status(404).json({ message: 'User not found' });
+  dbConnection.query(query, [userId], (error, results) => {
+    if (error) {
+      console.error('Lỗi khi lấy danh sách người dùng:', error);
+      res.status(500).json({ error: 'Lỗi khi lấy danh sách người dùng' });
     } else {
-      res.status(200).json(result[0]);
+      res.status(200).json(results[0]);
     }
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: `An error occurred while retrieving the user... ${error.message}` });
-  }
+  });
 };
 
 // Create a new user
@@ -70,10 +56,9 @@ export const createUser = async (req, res) => {
 // Update a user by ID
 export const updateUser = async (req, res) => {
   const userId = req.params.id;
-  const { password, email } = req.body;
-
+  const { email, phone, name, address } = req.body;
   try {
-    await dbConnection.query('UPDATE Users SET password = ?, email = ? WHERE id = ?', [password, email, userId]);
+    dbConnection.query('UPDATE Users SET  email = ?, phone = ?, name = ?, address = ? WHERE id = ?', [email, phone, name, address, userId]);
     res.status(200).json({ message: 'User updated successfully' });
   } catch (error) {
     console.log(error);
@@ -81,27 +66,10 @@ export const updateUser = async (req, res) => {
   }
 };
 
-export const updateImage = async (req, res) => {
-  const userId = req.params.id;
-  console.log('====================================');
-  console.log('req', req.body);
-  console.log('====================================');
-  const { uploadImage } = req.body;
-
-  try {
-    dbConnection.query('UPDATE users SET img = ? WHERE id = ?', [uploadImage, userId]);
-    res.status(200).json({ message: 'User image update successfully' });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: `An error occurred while updating the user Image... ${error.message}` });
-  }
-};
-
 
 // Delete a user by ID
 export const deleteUser = async (req, res) => {
   const userId = req.params.id;
-
   try {
     const result = await dbConnection.query('DELETE FROM Users WHERE id = ?', [userId]);
 
@@ -113,5 +81,51 @@ export const deleteUser = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: `An error occurred while deleting the user... ${error.message}` });
+  }
+};
+
+export const updatePassword = async (req, res) => {
+  const userId = req.params.id;
+  const { oldPassword, newPassword } = req.body;
+
+  try {
+    // Lấy thông tin người dùng từ database
+    const query = 'SELECT * FROM Users WHERE id = ?';
+
+    const [user] = await new Promise((resolve, reject) => {
+      dbConnection.query(query, [userId], (error, results) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(results);
+        }
+      });
+    });
+
+    // Kiểm tra mật khẩu hiện tại
+    const isPasswordValid = await bcrypt.compare(oldPassword, user.password);
+
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: 'Incorrect current password' });
+    }
+
+    // Mã hóa mật khẩu mới
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // Cập nhật mật khẩu mới vào database
+    await new Promise((resolve, reject) => {
+      dbConnection.query('UPDATE Users SET password = ? WHERE id = ?', [hashedPassword, userId], (error) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve();
+        }
+      });
+    });
+
+    res.status(200).json({ message: 'Password updated successfully' });
+  } catch (error) {
+    console.error('Lỗi khi cập nhật mật khẩu:', error);
+    res.status(500).json({ error: 'Lỗi khi cập nhật mật khẩu' });
   }
 };

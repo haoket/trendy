@@ -16,8 +16,60 @@ const ProductDetails = () => {
   const [totalPrice, setTotalPrice] = useState();
   const [price, setPrice] = useState();
   const [listImg, setListImg] = useState([]);
+  const [dataComment, setDataComment] = useState([]);
+  const [comment, setComment] = useState('');
+  const { user } = useContext(Context);
+  const [showFullDescription, setShowFullDescription] = useState(false);
 
 
+
+  const truncateDescription = (description) => {
+    const maxLength = 1000; // Độ dài tối đa của mô tả ngắn gọn
+    if (description.length > maxLength) {
+      return `${description.slice(0, maxLength)}...`;
+    }
+    return description;
+  };
+
+  // lấy data comment
+  const fetchComment = async () => {
+    try {
+      const response = await axios.get(`${apiDomain}/comment-product/${id}`);
+      setDataComment(response.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  }
+
+
+  // bình luận 
+  const handleComment = async () => {
+    const commentData = {
+      id_product: id,
+      id_user: user.id,
+      content: comment,
+      date_create: new Date(),
+      reply: '',
+    };
+
+    try {
+      await axios.post(`${apiDomain}/comment-product`, { commentData });
+      fetchComment();
+      toast.success('Comment successfully', {
+        position: 'top-right',
+        autoClose: 4000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+
+      // Cập nhật giá trị của comment thành chuỗi rỗng
+      setComment('');
+    } catch (error) {
+      console.error('Error posting comment:', error);
+    }
+  };
   const parseImageLink = (imageLink) => {
     try {
       const imageArray = JSON.parse(imageLink);
@@ -52,6 +104,8 @@ const ProductDetails = () => {
 
 
     fetchProductDetails();
+    fetchComment();
+
   }, [])
 
   const handleIncrement = async () => {
@@ -165,18 +219,16 @@ const ProductDetails = () => {
                   {product.Name}
                 </h1>
                 <div className="product-info-detail">
-                  <span className="product-info-detail-title">Brand:</span>
+                  <span className="product-info-detail-title">Loại sản phẩm:</span>
                   {product.Category}
                 </div>
                 <div className="product-info-detail">
-                  <span className="product-info-detail-title">Rated:</span>
+                  <span className="product-info-detail-title">Đánh giá:</span>
                   <span className="rating">
                     <h2 className='text-red-500 gap-6 mb-10'>{renderStars(product.Stars)}</h2>
                   </span>
                 </div>
-                <p className="product-description">
-                  Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo libero alias officiis dolore doloremque eveniet culpa dignissimos, itaque, cum animi excepturi sed veritatis asperiores soluta, nisi atque quae illum. Ipsum.
-                </p>
+
                 <div className="product-info-price">{totalPrice}.000 VNĐ</div>
                 <div className="product-quantity-wrapper">
                   <span className="product-quantity-btn" onClick={handleDeCrease}
@@ -196,255 +248,113 @@ const ProductDetails = () => {
           </div>
           <div className="box">
             <div className="box-header">
-              description
+              Chi tiết sản phẩm
             </div>
             <div className="product-detail-description">
               <ReactQuill
                 theme="snow"
-                value={product.Description}
+                value={showFullDescription ? product.Description : truncateDescription(product.Description)}
                 readOnly={true}
                 modules={{ toolbar: null }}
                 className="quill-no-border border-none"
 
               />
+              {!showFullDescription ? (
+                <button className=' btn btn-primary ' onClick={() => setShowFullDescription(true)}>Xem thêm</button>
+              ) : (
+                <button className=' btn btn-primary ' onClick={() => setShowFullDescription(false)}>Thu gọn</button>
+              )}
             </div>
+
           </div>
-          <div className="box">
-            <div className="box-header">
-              review
-            </div>
-            <div>
-              <div className="user-rate">
-                <div className="user-info">
-                  <div className="user-avt">
-                    <img src="./images/tuat.jpg" alt="" />
+
+
+        </div>
+
+
+
+
+
+        {/* comment section */}
+        <h1 className='text-3xl font-bold mb-4 text-center'>Nhận xét</h1>
+        <div className="d-flex align-items-center justify-content-center">
+          <div className="container">
+
+            {dataComment.length > 0 && dataComment.map((comment, index) => (
+              <div className="row justify-content-center mb-4" key={index}>
+                <div className="col-lg-8">
+                  <div className="comments">
+
+                    <div className="comment d-flex mb-4" >
+                      <div className="flex-shrink-0">
+                        <div className="avatar avatar-sm rounded-circle">
+                          <img className="avatar-img" src="https://cdn-icons-png.flaticon.com/512/3177/3177440.png" alt="" />
+                        </div>
+                      </div>
+                      <div className="flex-grow-1 ms-2 ms-sm-3">
+                        <div className="comment-meta d-flex align-items-baseline">
+                          <h6 className="me-2">{comment.name}</h6>
+                          <span className="text-muted">{comment.date_create}</span>
+                        </div>
+                        <div className="comment-body">
+                          {comment.content}
+                        </div>
+                        {comment.content_reply != '' && (
+                          <div className="comment-replies bg-light p-3 mt-3 rounded">
+                            <div className="reply d-flex mb-4">
+                              <div className="flex-shrink-0">
+                                <div className="avatar avatar-sm rounded-circle">
+                                  <img className="avatar-img" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTJH2vP6Ji_pkqdlVhLkOyVC7Ebiexss_ln3A&usqp=CAU" alt="" />
+                                </div>
+                              </div>
+                              <div className="flex-grow-1 ms-2 ms-sm-3">
+                                <div className="reply-meta d-flex align-items-baseline">
+                                  <h6 className="mb-0 me-2">BeautyShop</h6>
+                                  <span className="text-muted">{comment.date_reply}</span>
+                                </div>
+                                <div className="reply-body">
+                                  {comment.content_reply}
+                                </div>
+                              </div>
+                            </div>
+
+                          </div>
+                        )}
+
+                      </div>
+                    </div>
+
+
+
                   </div>
-                  <div className="user-name">
-                    <span className="name">tuat tran anh</span>
-                    <span className="rating">
-                      <i className='bx bxs-star'></i>
-                      <i className='bx bxs-star'></i>
-                      <i className='bx bxs-star'></i>
-                      <i className='bx bxs-star'></i>
-                      <i className='bx bxs-star'></i>
-                    </span>
-                  </div>
-                </div>
-                <div className="user-rate-content">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio ea iste, veritatis nobis amet illum, cum alias magni dolores odio, eius quo excepturi veniam ipsa voluptatibus natus voluptas vero? Aspernatur!
                 </div>
               </div>
-              <div className="user-rate">
-                <div className="user-info">
-                  <div className="user-avt">
-                    <img src="./images/tuat.jpg" alt="" />
+            ))}
+
+            <div className="row justify-content-center">
+
+              <div className="col-lg-8">
+                <div className="comment-form d-flex align-items-center">
+                  <div className="flex-shrink-0">
+                    <div className="avatar avatar-sm rounded-circle">
+                      <img className="avatar-img" src="https://cdn-icons-png.flaticon.com/512/3177/3177440.png" alt="" />
+                    </div>
                   </div>
-                  <div className="user-name">
-                    <span className="name">tuat tran anh</span>
-                    <span className="rating">
-                      <i className='bx bxs-star'></i>
-                      <i className='bx bxs-star'></i>
-                      <i className='bx bxs-star'></i>
-                      <i className='bx bxs-star'></i>
-                      <i className='bx bxs-star'></i>
-                    </span>
-                  </div>
-                </div>
-                <div className="user-rate-content">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio ea iste, veritatis nobis amet illum, cum alias magni dolores odio, eius quo excepturi veniam ipsa voluptatibus natus voluptas vero? Aspernatur!
-                </div>
-              </div>
-              <div className="user-rate">
-                <div className="user-info">
-                  <div className="user-avt">
-                    <img src="./images/tuat.jpg" alt="" />
-                  </div>
-                  <div className="user-name">
-                    <span className="name">tuat tran anh</span>
-                    <span className="rating">
-                      <i className='bx bxs-star'></i>
-                      <i className='bx bxs-star'></i>
-                      <i className='bx bxs-star'></i>
-                      <i className='bx bxs-star'></i>
-                      <i className='bx bxs-star'></i>
-                    </span>
+                  <div className="flex-grow-1 ms-2 ms-sm-3">
+                    <div className='flex'>
+                      <input className="form-control py-0 px-1 border-0 " placeholder="Start writing..." value={comment} onChange={(e) => setComment(e.target.value)} style={{ resize: "none", width: "80%" }}></input>
+                      <button className="btn btn-primary ml-2  w-[20%]" onClick={handleComment}>Nhập</button>
+                    </div>
+
                   </div>
                 </div>
-                <div className="user-rate-content">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio ea iste, veritatis nobis amet illum, cum alias magni dolores odio, eius quo excepturi veniam ipsa voluptatibus natus voluptas vero? Aspernatur!
-                </div>
-              </div>
-              <div className="user-rate">
-                <div className="user-info">
-                  <div className="user-avt">
-                    <img src="./images/tuat.jpg" alt="" />
-                  </div>
-                  <div className="user-name">
-                    <span className="name">tuat tran anh</span>
-                    <span className="rating">
-                      <i className='bx bxs-star'></i>
-                      <i className='bx bxs-star'></i>
-                      <i className='bx bxs-star'></i>
-                      <i className='bx bxs-star'></i>
-                      <i className='bx bxs-star'></i>
-                    </span>
-                  </div>
-                </div>
-                <div className="user-rate-content">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio ea iste, veritatis nobis amet illum, cum alias magni dolores odio, eius quo excepturi veniam ipsa voluptatibus natus voluptas vero? Aspernatur!
-                </div>
-              </div>
-              <div className="user-rate">
-                <div className="user-info">
-                  <div className="user-avt">
-                    <img src="./images/tuat.jpg" alt="" />
-                  </div>
-                  <div className="user-name">
-                    <span className="name">tuat tran anh</span>
-                    <span className="rating">
-                      <i className='bx bxs-star'></i>
-                      <i className='bx bxs-star'></i>
-                      <i className='bx bxs-star'></i>
-                      <i className='bx bxs-star'></i>
-                      <i className='bx bxs-star'></i>
-                    </span>
-                  </div>
-                </div>
-                <div className="user-rate-content">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio ea iste, veritatis nobis amet illum, cum alias magni dolores odio, eius quo excepturi veniam ipsa voluptatibus natus voluptas vero? Aspernatur!
-                </div>
-              </div>
-              <div className="box">
-                <ul className="pagination">
-                  <li><a href="#"><i className='bx bxs-chevron-left'></i></a></li>
-                  <li><a href="#" className="active">1</a></li>
-                  <li><a href="#">2</a></li>
-                  <li><a href="#">3</a></li>
-                  <li><a href="#">4</a></li>
-                  <li><a href="#">5</a></li>
-                  <li><a href="#"><i className='bx bxs-chevron-right'></i></a></li>
-                </ul>
               </div>
             </div>
-          </div>
-          <div className="box">
-            <div className="box-header">
-              related products
-            </div>
-            <div className="row" id="related-products"></div>
           </div>
         </div>
       </div>
-      {/* <!-- end product-detail content --> */}
 
 
-
-
-
-
-
-
-
-      {/* <div className='flex flex-col gap-6'>
-        <div>
-          <div className='w-full sm:flex justify-center gap-[3rem] p-[2rem]'>
-            <div className=' sm:w-[45%] rounded-lg'>
-              <img src={apiDomain + "/image/" + parseImageLink(product.ImageLink)} />
-              <div>
-
-                ////////////////////////
-                 {product.ImageLink.length > 0 && product.ImageLink.map((image, index) => (
-
-                  <div key={index} className="m-1 relative" >
-                    <img src={apiDomain + "/image/" + image} width={100} height={100} alt={`Ảnh ${index}`} />
-                  </div>
-                ))} 
-
-                ////////////////
-
-              </div>
-            </div>
-            <div className='sm:w-[55%] '>
-              <h2 className='font-bold text-2xl mb-10'>{product.Name}</h2>
-              <h1 className='tracking-wide font-bold mb-10'>Category: {product.Category}</h1>
-              <div className='flex'>
-                <h2 className='text-red-500 gap-6 mb-10'>{renderStars(product.Stars)}</h2>
-
-                <h1>(1 customer review)</h1>
-
-              </div>
-              <div className='flex flex-row gap-20'>
-                <div>
-                  <p>Giá sản phẩm</p>
-                  <p className='font-bold text-2xl mb-10'> {totalPrice}.000 vnđ</p>
-                </div>
-                <div className='flex gap-6 mb-10'>
-                  <div className='flex items-center'>
-                    <button
-                      onClick={handleDeCrease}
-                      disabled={itemCount <= 1}
-                      className='border border-black rounded-md px-2 py-1 '
-                    >
-                      <svg
-                        xmlns='http://www.w3.org/2000/svg'
-                        className='h-5 w-5 text-black'
-                        viewBox='0 0 20 20'
-                        fill='currentColor'
-
-                      >
-                        <path
-                          fillRule='evenodd'
-                          d='M8.293 4.293a1 1 0 011.414 0L10 5.586l2.293-2.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z'
-                          clipRule='evenodd'
-
-                        />
-                      </svg>
-                    </button>
-                    <span className='mx-2'>{itemCount}</span>
-                    <button
-                      onClick={handleIncrement}
-                      className='border border-black rounded-md px-3 py-1'
-                    >
-                      <svg
-                        xmlns='http://www.w3.org/2000/svg'
-                        className='h-5 w-5 text-black'
-                        viewBox='0 0 20 20'
-                        fill='currentColor'
-                      >
-                        <path
-                          fillRule='evenodd'
-                          d='M10 4a1 1 0 011 1v4h4a1 1 0 110 2h-4v4a1 1 0 11-2 0v-4H5a1 1 0 110-2h4V5a1 1 0 011-1z'
-                          clipRule='evenodd'
-                        />
-                      </svg>
-                    </button>
-                  </div>
-                  <button
-                    onClick={() => handleAddToCart(product.ID)}
-                    className='bg-red-500 text-white rounded-md px-4 py-2 mt-3'
-                  >
-                    Add to Cart
-                  </button>
-                </div>
-              </div>
-              <div className='description-display'>
-
-                <h1 className='font-bold text-2xl mb-5 '>Mô tả sản phẩm</h1>
-                <ReactQuill
-                  theme="snow"
-                  value={product.Description}
-                  readOnly={true}
-                  modules={{ toolbar: null }}
-                  className="quill-no-border"
-
-                />
-              </div>
-
-
-            </div>
-          </div>
-        </div>
-      </div> */}
     </>
   );
 };

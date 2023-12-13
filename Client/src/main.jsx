@@ -6,11 +6,14 @@ import './index.css'
 import { ContextProvider } from './context/Context.jsx'
 import { BrowserRouter } from 'react-router-dom'
 
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <ContextProvider>
 
+
       <App />
+
 
     </ContextProvider>
   </React.StrictMode>

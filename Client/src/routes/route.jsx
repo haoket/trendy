@@ -20,16 +20,14 @@ import Category from "../admin/components/category/Category";
 import ProductCategories from "../user/components/product/ProductCategories";
 import { Order } from "../user/components/order/Order";
 import { Profile } from "../user/components/profile/Profile";
-import { OrderSuccess } from "../user/components/order/OrderSuccess";
-import { OrderWaiting } from "../user/components/order/OrderWaiting";
-import { OrderShiping } from "../user/components/order/OrderShiping";
-import { OrderCancel } from "../user/components/order/OrderCancel";
 import ProductSearchPage from "../user/components/product/ProductSearchPage";
 import BlogTable from "../admin/components/blog/BlogTable";
 import { CreateBlog } from "../admin/components/blog/CreateBlog";
 import { UpdateBlog } from "../admin/components/blog/UpdateBlog";
 import Blog from "../pages/blog/Blog";
 import BlogDetail from "../pages/blog/BlogDetail";
+import Comment from "../admin/components/Comment/Comment";
+import { ChangePassword } from "../user/components/profile/ChangePassword";
 
 
 
@@ -48,15 +46,11 @@ export const router = createBrowserRouter(
                 <Route path="products/:slug" element={<ProductCategories />} />
                 <Route path="search/:name" element={<ProductSearchPage />} />
                 <Route path="/create-order" element={<Order />} />
-                <Route path="/contact/" element={<Contact />} />
                 <Route path="/blog" element={<Blog />} />
                 <Route path="/blog/:slug" element={<BlogDetail />} />
-                <Route path="/profile/" element={<Profile />}>
-                    <Route index element={<OrderWaiting />} />
-                    <Route path="order-success" element={<OrderSuccess />} />
-                    <Route path="order-shiping" element={<OrderShiping />} />
-                    <Route path="order-cancel" element={<OrderCancel />} />
-                </Route>
+                <Route path="/profile/" element={<Profile />} />
+                <Route path="/change-password" element={<ChangePassword />} />
+
             </Route>
             {/* ADMIN ROUTES */}
             <Route path="/admin" element={<AdminLayout />}>
@@ -70,7 +64,7 @@ export const router = createBrowserRouter(
                 <Route path="create-blog" element={<CreateBlog />} />
                 <Route path="update/:product_id" element={<UpdateProductForm />} />
                 <Route path="updateBlog/:blog_id" element={<UpdateBlog />} />
-                <Route path="more/:product_id" element={<ProductDetails />} />
+                <Route path="comment" element={<Comment />} />
             </Route>
             {/* AUTH ROUTES */}
             <Route path="auth" element={<AuthLayout />}>

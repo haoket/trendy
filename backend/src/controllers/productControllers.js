@@ -190,3 +190,80 @@ export const getProductsPriceAsc = (req, res) => {
     }
   });
 };
+export const commentProduct = (req, res) => {
+
+  const id_user = req.body.commentData.id_user;
+  const id_product = req.body.commentData.id_product;
+  const content = req.body.commentData.content;
+  const date_create = new Date();
+  const query = 'INSERT INTO comment(id_user,product_id, content, date_create) VALUES (?, ?, ?, ?)';
+  dbConnection.query(query, [id_user, id_product, content, date_create], (error, results) => {
+    if (error) {
+      console.error('Lỗi khi bình luận', error);
+      res.status(500).json({ error: 'Lỗi khi tạo bình luận' });
+    } else {
+      res.status(200).json(results);
+    }
+  });
+};
+
+
+export const getAllComment = (req, res) => {
+  const query = 'SELECT comment.id, comment.id_user, comment.product_id, products.Name AS product_name, comment.content, comment.content_reply, users.address,  users.email, users.name,  users.phone FROM comment INNER JOIN users ON comment.id_user = users.id INNER JOIN products ON comment.product_id = products.id';
+  dbConnection.query(query, (error, results) => {
+    if (error) {
+      console.error('Lỗi khi lấy danh sách bình luận:', error);
+      res.status(500).json({ error: 'Lỗi khi lấy danh sách bình luận' });
+    } else {
+      res.status(200).json(results);
+    }
+  });
+}
+
+export const getCommentProduct = (req, res) => {
+  const id = req.params.id;
+
+  const query = 'SELECT * FROM comment INNER JOIN users ON comment.id_user = users.id where product_id = ?';
+  dbConnection.query(query, [id], (error, results) => {
+    if (error) {
+      console.error('Lỗi khi lấy danh sách bình luận:', error);
+      res.status(500).json({ error: 'Lỗi khi lấy danh sách bình luận' });
+    } else {
+      res.status(200).json(results);
+    }
+  });
+};
+
+export const replyComment = (req, res) => {
+  const id = req.params.id;
+  const content = req.body.replyContent;
+  console.log('====================================');
+  console.log("content", content);
+  console.log('====================================');
+  const query = 'UPDATE comment SET content_reply = ? WHERE id = ?';
+  dbConnection.query(query, [content, id], (error, results) => {
+    if (error) {
+      console.error('Lỗi khi bình luận', error);
+      res.status(500).json({ error: 'Lỗi khi bình luận' });
+    } else {
+      res.status(200).json("binh luan thanh cong");
+    }
+  });
+};
+export const deleteComment = (req, res) => {
+  const id = req.params.id;
+  const query = 'DELETE FROM comment WHERE id = ?';
+
+  dbConnection.query(query, [id], (error, result) => {
+    if (error) {
+      console.error('Lỗi khi xóa bình luận:', error);
+      res.status(500).json({ error: 'Lỗi khi xóa bình luận' });
+    } else {
+      if (result.affectedRows === 0) {
+        res.status(404).json({ message: ' không được tìm thấy' });
+      } else {
+        res.status(200).json({ message: 'đã được xóa thành công' });
+      }
+    }
+  });
+};

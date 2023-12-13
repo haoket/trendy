@@ -10,7 +10,7 @@ import cors from "cors";
 import authRoutes from "./src/routes/authRoutes.js";
 import cartRoutes from "./src/routes/cartRoute.js";
 import blogRoute from "./src/routes/blogRoute.js";
-import fs from 'fs';
+import payment from "./src/routes/payment.js";
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
@@ -33,6 +33,7 @@ productRoutes(app);
 userRoutes(app);
 cartRoutes(app);
 blogRoute(app);
+payment(app);
 app.get("/", (req, res) => {
   res.send("Hello😁 Welcome ecommerce API!");
 });

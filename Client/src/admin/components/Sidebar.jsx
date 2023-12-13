@@ -18,18 +18,18 @@ export const Sidebar = () => {
     >
 
       {/* <!-- menu --> */}
-      <div class="menu mt-20">
+      <div className="menu mt-20">
 
-        <div class="menu-body">
-          <div class="dropdown">
-            <a href="#" class="d-flex align-items-center" data-bs-toggle="dropdown">
-              <div class="avatar me-3">
+        <div className="menu-body">
+          <div className="dropdown">
+            <a href="#" className="d-flex align-items-center" data-bs-toggle="dropdown">
+              <div className="avatar me-3">
                 {/* <img src="../images/user/man_avatar5.jpg"
                   class="rounded-circle" alt="image" /> */}
               </div>
               <div>
-                <div class="fw-bold">Văn Hào</div>
-                <small class="text-muted">Admin</small>
+                <div className="fw-bold">Văn Hào</div>
+                <small className="text-muted">Admin</small>
               </div>
             </a>
 
@@ -53,8 +53,8 @@ export const Sidebar = () => {
             </li>
             <li className={selectedItem === 'Products' ? 'selected' : ''}>
               <Link to="/admin/products" onClick={() => handleItemClick('Products')}>
-                <span class="nav-link-icon">
-                  <i class="bi bi-truck"></i>
+                <span className="nav-link-icon">
+                  <i className="bi bi-truck"></i>
                 </span>
                 <span>Products</span>
               </Link>
@@ -62,8 +62,8 @@ export const Sidebar = () => {
             </li>
             <li className={selectedItem === 'Category' ? 'selected' : ''}>
               <Link to="/admin/category" onClick={() => handleItemClick('Category')}>
-                <span class="nav-link-icon">
-                  <i class="bi bi-wallet2"></i>
+                <span className="nav-link-icon">
+                  <i className="bi bi-wallet2"></i>
                 </span>
                 <span>Category</span>
               </Link>
@@ -71,18 +71,27 @@ export const Sidebar = () => {
             </li>
             <li className={selectedItem === 'Customers' ? 'selected' : ''}>
               <Link to='/admin/users' onClick={() => handleItemClick('Customers')}>
-                <span class="nav-link-icon">
-                  <i class="bi bi-person-badge"></i>
+                <span className="nav-link-icon">
+                  <i className="bi bi-person-badge"></i>
                 </span>
                 <span>Customers</span>
               </Link>
             </li>
             <li className={selectedItem === 'blog' ? 'selected' : ''}>
               <Link to='/admin/blog' onClick={() => handleItemClick('blog')}>
-                <span class="nav-link-icon">
-                  <i class="bi bi-receipt"></i>
+                <span className="nav-link-icon">
+                  <i className="bi bi-receipt"></i>
                 </span>
                 <span>Blog</span>
+              </Link>
+
+            </li>
+            <li className={selectedItem === 'comment' ? 'selected' : ''}>
+              <Link to='/admin/comment' onClick={() => handleItemClick('comment')}>
+                <span className="nav-link-icon">
+                  <i className="bi bi-chat-left-dots"></i>
+                </span>
+                <span>Comments</span>
               </Link>
 
             </li>

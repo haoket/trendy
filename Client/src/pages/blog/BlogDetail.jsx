@@ -7,6 +7,13 @@ import ReactQuill from 'react-quill';
 const BlogDetail = () => {
     const [data, setData] = useState([]);
     const param = useParams();
+
+
+    const formatDateString = (dateString) => {
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        const formattedDate = new Date(dateString).toLocaleDateString(undefined, options);
+        return formattedDate;
+    };
     const getBlog = async () => {
         const data = await getBlogById(param.slug);
         setData(data);
@@ -28,7 +35,7 @@ const BlogDetail = () => {
                     <h1 >{data.title}</h1>
                     <div className="post-option">
 
-                        <span className="post-date"><a href="http://jobcareer.chimpgroup.com/jobdoor/2015/11/"><i class="cs-color icon-calendar6"></i>{data.date_create}</a></span>
+                        <span className="post-date"><a href="http://jobcareer.chimpgroup.com/jobdoor/2015/11/"><i class="cs-color icon-calendar6"></i>{formatDateString(data.date_create)}</a></span>
                     </div>
                 </div>
                 <div className="cs-post-option-panel">
@@ -46,10 +53,10 @@ const BlogDetail = () => {
                     <div className="tags">
                         <span>Tags</span>
                         <ul>
-                            <li><a rel="tag" href="http://jobcareer.chimpgroup.com/jobdoor/tag/college/">College</a></li>
-                            <li><a rel="tag" href="http://jobcareer.chimpgroup.com/jobdoor/tag/job/">Job</a></li>
-                            <li><a rel="tag" href="http://jobcareer.chimpgroup.com/jobdoor/tag/search/">Search</a></li>
-                            <li><a rel="tag" href="http://jobcareer.chimpgroup.com/jobdoor/tag/teacher/">Teacher</a></li>
+                            <li><a rel="tag" href="http://jobcareer.chimpgroup.com/jobdoor/tag/college/">Làm đẹp</a></li>
+                            <li><a rel="tag" href="http://jobcareer.chimpgroup.com/jobdoor/tag/job/">Mỹ phẩm</a></li>
+                            <li><a rel="tag" href="http://jobcareer.chimpgroup.com/jobdoor/tag/search/">Phái đẹp</a></li>
+                            <li><a rel="tag" href="http://jobcareer.chimpgroup.com/jobdoor/tag/teacher/">Nước hoa</a></li>
                         </ul>
                     </div>
 

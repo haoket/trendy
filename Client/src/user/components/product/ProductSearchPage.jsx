@@ -10,7 +10,6 @@ const ProductSearchPage = () => {
   const { name } = useParams();
   const [data, setData] = useState([]);
   const [dataProduct, setDataProduct] = useState([]);
-  const [tempDataProduct, setTempDataProduct] = useState([]);
   //lấy data product by category
   const parseImageLink = (imageLink) => {
 

@@ -9,7 +9,12 @@ import {
   getProductsByCategory,
   searchProduct,
   getProductsPriceDesc,
-  getProductsPriceAsc
+  getProductsPriceAsc,
+  commentProduct,
+  getCommentProduct,
+  getAllComment,
+  replyComment,
+  deleteComment
 } from '../controllers/productControllers.js';
 import fs from 'fs';
 import path from 'path';
@@ -54,6 +59,10 @@ const productRoutes = (app) => {
     .put(updateProduct)
     .delete(deleteProduct);
 
+  app.route('/comment-product').post(commentProduct);
+  app.route('/comment-product/:id').get(getCommentProduct);
+  app.route('/get-all-comment').get(getAllComment);
+
 
 
   app.route('/uploadImage')
@@ -69,6 +78,9 @@ const productRoutes = (app) => {
     .get(getProductsPriceDesc);
   app.route('/getProductsPriceAsc')
     .get(getProductsPriceAsc);
+  app.route('/reply-comment/:id')
+    .put(replyComment)
+    .delete(deleteComment);
 
 };
 

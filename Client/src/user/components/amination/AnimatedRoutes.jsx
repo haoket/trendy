@@ -13,7 +13,7 @@ const AnimatedRoutes = () => {
             <CSSTransition
                 key={location.key}
                 classNames="fade"
-                timeout={3000}
+                timeout={500}
             >
                 {router}
             </CSSTransition>

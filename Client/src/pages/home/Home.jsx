@@ -16,7 +16,7 @@ const Home = () => {
   useEffect(() => {
     setTimeout(() => {
       setLoading(false); // Thay đổi trạng thái loading thành false sau 2 giờ
-    }, 2000);
+    }, 1000);
   })
   const slides = [
     {

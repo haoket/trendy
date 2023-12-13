@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { apiDomain } from '../../../utils/utilsDomain';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { getCategory, getProducts, getProductsPriceDesc, getProductsPriceAsc } from "../../../utils/apiCalls";
 import Loading from "../amination/Loading";
 
@@ -70,7 +71,7 @@ const ProductList = () => {
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
-    }, 2000);
+    }, 1000);
   }, []);
 
   // Calculate the index of the last product on the current page
@@ -113,7 +114,7 @@ const ProductList = () => {
                   ))}
                 </div>
                 <div>
-                  <h1>Lọc</h1>
+                  <h1>Lọc <FontAwesomeIcon icon="fa-solid fa-filter" /></h1>
                   <select value={selectedOption} id="" onChange={handleSortChange}>
                     <option value="">chọn</option>
                     <option value="price-asc" >
@@ -167,7 +168,7 @@ const ProductList = () => {
                     </div>
                   </div>
                 )}
-                <div div className="box">
+                <div className="box">
                   <ul className="pagination">
                     {Array.from({ length: Math.ceil(dataProduct.length / productsPerPage) }, (_, index) => (
                       <li key={index} className={currentPage === index + 1 ? "active" : ""}>

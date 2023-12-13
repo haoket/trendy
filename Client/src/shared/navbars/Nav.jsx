@@ -16,7 +16,7 @@ import '../../css/grid.css'
 const Navbar = () => {
   const { cartItems } = useContext(Context);
   const [itemSearch, setItemSearch] = useState('');
-  const [isActive, setIsActive] = useState(false);
+  const [isActive, setIsActive] = useState(true);
   const [classActive, setClassActive] = useState('');
   const handleLogout = () => {
     localStorage.removeItem('user');
@@ -27,10 +27,10 @@ const Navbar = () => {
   const handleDisplayMenu = () => {
     if (isActive) {
       setClassActive('header-wrapper');
-      setIsActive(!isActive);
+      setIsActive(false);
     } else {
       setClassActive('header-wrapper active');
-      setIsActive(!isActive);
+      setIsActive(true);
     }
   }
   const user = JSON.parse(localStorage.getItem('user'));
@@ -40,7 +40,7 @@ const Navbar = () => {
       <header>
         {/* <!-- mobile menu --> */}
         <div className="mobile-menu bg-second" >
-          <a href="#" className="mb-logo">ATShop</a>
+          <Link to='/' className="mb-logo">ATShop</Link>
           <span className="mb-menu-toggle" id="mb-menu-toggle" onClick={handleDisplayMenu}>
             <i className='bx bx-menu'></i>
           </span>
@@ -112,11 +112,11 @@ const Navbar = () => {
                     <>
                       <Link to="/profile " >
                         <div className='flex justify-center flex-col items-center'>
-                          <img src={apiDomain + "/image/" + user.img} alt="" className='rounded-full  h-10' />
-                          <h1 className='text-[10px] flex justify-center items-center'>{user.name}</h1>
+                          {/* <img src={apiDomain + "/image/" + user.img} alt="" className='rounded-full  h-10' /> */}
+                          <h1 className='text-[15px] flex justify-center items-center mr-2'>Tài khoản: {user.name}</h1>
                         </div></Link>
 
-                      <button className="btn " onClick={handleLogout} style={{ fontSize: "1rem" }}>
+                      <button className="btn text-[10px] border border-[#f42c37] hover:bg-[#f42c37]" onClick={handleLogout} >
 
                         Đăng xuất
                       </button>

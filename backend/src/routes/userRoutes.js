@@ -5,7 +5,8 @@ import {
   createUser,
   updateUser,
   deleteUser,
-  updateImage
+  updatePassword,
+
 } from '../controllers/userControllers.js';
 
 const userRoutes = (app) => {
@@ -17,7 +18,8 @@ const userRoutes = (app) => {
     .get(getUserById)
     .put(updateUser)
     .delete(deleteUser);
-  app.route('/users/update/:id').put(updateImage);
+  app.route('/change-password/:id')
+    .put(updatePassword);
 };
 
 export default userRoutes;

@@ -7,19 +7,9 @@ const dbConnection = createDatabaseConnection();
 
 // Create a new order
 export const createOrder = async (req, res) => {
-  const { CustomerID, name, TotalAmount, address, email, method_payment, message, phone, date_create } = req.body;
-  const query = 'INSERT INTO orders (CustomerID,name , TotalAmount, address,email, method_payment, message, phone, date_create, status) VALUES (?, ?, ?,?, ?, ?, ?, ?,?, 0)';
-  dbConnection.query(query, [CustomerID, name, TotalAmount, address, email, method_payment, message, phone, date_create], (error, results) => {
-    if (error) {
-      console.error('Lỗi khi tạo sản phẩm:', error);
-      res.status(500).json({ error: 'Lỗi khi tạo đơn hàng' });
-    } else {
-      res.status(201).json(results.insertId);
-
-    }
-
-  });
-  dbConnection.query(query, [CustomerID, name, TotalAmount, address, email, method_payment, message, phone, date_create], (error, results) => {
+  const { CustomerID, name, TotalAmount, address, email, method_payment, message, phone, date_create, isPaid, date_payment } = req.body;
+  const query = 'INSERT INTO orders (CustomerID,name , TotalAmount, address,email, method_payment, message, phone, date_create, status, isPaid, date_payment) VALUES (?, ?, ?,?, ?, ?, ?, ?,?, 0, ?, ?)';
+  dbConnection.query(query, [CustomerID, name, TotalAmount, address, email, method_payment, message, phone, date_create, isPaid, date_payment], (error, results) => {
     if (error) {
       console.error('Lỗi khi tạo sản phẩm:', error);
       res.status(500).json({ error: 'Lỗi khi tạo đơn hàng' });
@@ -87,12 +77,71 @@ export const getOrderById = async (req, res) => {
     // sql.close();
   }
 };
+
+
+
+
+export const getOrderByIDCustomer = async (req, res) => {
+  const userID = req.query.id;
+  const query = `
+    SELECT
+      o.id AS ID,
+      o.status AS Status,
+      o.isPaid AS isPaid,
+      o.date_create AS date_create,
+      oi.ProductID,
+      oi.Quantity,
+      oi.Price,
+      o.TotalAmount,
+      p.name AS Name,
+      p.ImageLink AS img
+    FROM orders o
+    JOIN orderitems oi ON o.id = oi.OrderID
+    JOIN products p ON oi.ProductID = p.ID
+    WHERE o.CustomerID = ?;
+  `;
+
+  // Thực hiện truy vấn SQL sử dụng thư viện database hoặc driver SQL của bạn ở đây
+  dbConnection.query(query, [userID], (error, results) => {
+    if (error) {
+      console.error('Lỗi khi thực hiện truy vấn SQL:', error);
+      res.status(500).json({ error: 'Lỗi khi thực hiện truy vấn SQL' });
+    } else {
+      // Xử lý kết quả trả về để tạo JSON theo định dạng mong muốn
+      const ordersWithProducts = {};
+      results.forEach((row) => {
+        if (!ordersWithProducts[row.ID]) {
+          ordersWithProducts[row.ID] = {
+            ID: row.ID,
+            TotalAmount: row.TotalAmount,
+            date_create: row.date_create,
+            Status: row.Status,
+            isPaid: row.isPaid,
+            products: [],
+          };
+        }
+        ordersWithProducts[row.ID].products.push({
+          ProductID: row.ProductID,
+          Quantity: row.Quantity,
+          Price: row.Price,
+          Name: row.Name,
+          img: row.img
+        });
+      });
+
+      // Chuyển đổi kết quả thành JSON và gửi về cho client
+      res.status(200).json(Object.values(ordersWithProducts));
+    }
+  });
+};
+
 export const getOrderByStatus = async (req, res) => {
   const status = req.query.status || 0;
   const userID = req.query.id;
   const query = `
     SELECT
       o.id AS ID,
+     
       oi.ProductID,
       oi.Quantity,
       oi.Price,

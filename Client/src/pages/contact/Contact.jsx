@@ -27,6 +27,7 @@ const Contact = () => {
         console.error('Payment link not found in the response');
       }
     } catch (error) {
+
       console.error('Error making payment:', error);
     }
   };
@@ -35,7 +36,7 @@ const Contact = () => {
   useEffect(() => {
     setTimeout(() => {
       setLoading(false); // Thay đổi trạng thái loading thành false sau 2 giờ
-    }, 2000);
+    }, 1000);
   })
   return (
     <>
@@ -44,10 +45,8 @@ const Contact = () => {
           <Loading />
         ) : (
           <div className="contact-area d-flex align-items-center mt-5 mb-5">
-            <div>
-              <h1>Payment Integration with VNPAY</h1>
-              <button onClick={handlePayment}>Make Payment</button>
-            </div>
+
+
             <div className="google-map">
               <div >
                 <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3835.7332975516097!2d108.24978007468239!3d15.975298241946591!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3142108997dc971f%3A0x1295cb3d313469c9!2zVHLGsOG7nW5nIMSQ4bqhaSBo4buNYyBDw7RuZyBuZ2jhu4cgVGjDtG5nIHRpbiB2w6AgVHJ1eeG7gW4gdGjDtG5nIFZp4buHdCAtIEjDoG4!5e0!3m2!1svi!2s!4v1701016608794!5m2!1svi!2s"

@@ -11,7 +11,17 @@ const OrdersTable = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [iOpenModalDetail, setOpenModalDetail] = useState(false);
 
+  const [perPage, setPerPage] = useState(10);
+  const [sortBy, setSortBy] = useState('ID');
+  const [sortOrder, setSortOrder] = useState('asc');
+  const [searchTerm, setSearchTerm] = useState('');
 
+
+  const formatDateString = (dateString) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    const formattedDate = new Date(dateString).toLocaleDateString(undefined, options);
+    return formattedDate;
+  };
 
   const openModalDetail = (order) => {
     setOpenModalDetail(true);
@@ -85,6 +95,35 @@ const OrdersTable = () => {
 
 
 
+  const handlePerPageChange = (e) => {
+    setPerPage(e.target.value);
+  };
+
+
+  const handleSortOrderChange = (e) => {
+    setSortOrder(e.target.value);
+    const sortedOrders = [...orders].sort((a, b) => {
+      if (e.target.value === 'asc') {
+        return a.TotalAmount - b.TotalAmount;
+      } else if (e.target.value === 'desc') {
+        return b.TotalAmount - a.TotalAmount;
+      }
+      return 0; // Nếu giá trị không phải 'asc' hoặc 'desc', trả về 0 để không làm thay đổi thứ tự
+    });
+
+    setOrders(sortedOrders);
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const handleSearch = () => {
+    // Gọi API tìm kiếm với giá trị searchTerm
+    // Sau đó cập nhật danh sách đơn hàng
+  };
+
+
   useEffect(() => {
     fetchOrders();
   }, []);
@@ -124,29 +163,25 @@ const OrdersTable = () => {
             <div class="d-md-flex gap-4 align-items-center">
               <div class="d-none d-md-flex">All Orders</div>
               <div class="d-md-flex gap-4 align-items-center">
-                <form class="mb-3 mb-md-0">
-                  <div class="row g-3">
-                    <div class="col-md-3">
-                      <select class="form-select">
-                        <option>Sort by</option>
+                <form className="mb-3 mb-md-0">
+                  <div className="row g-3">
+                    <div className="col-md-3">
+                      <select className="form-select" value={sortOrder} onChange={handleSortOrderChange}>
                         <option value="desc">Desc</option>
                         <option value="asc">Asc</option>
                       </select>
                     </div>
-                    <div class="col-md-3">
-                      <select class="form-select">
-                        <option value="10">10</option>
-                        <option value="20">20</option>
-                        <option value="30">30</option>
-                        <option value="40">40</option>
-                        <option value="50">50</option>
-                      </select>
-                    </div>
-                    <div class="col-md-6">
-                      <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Search" />
-                        <button class="btn btn-outline-light" type="button">
-                          <i class="bi bi-search"></i>
+                    <div className="col-md-6">
+                      <div className="input-group">
+                        <input
+                          type="text"
+                          className="form-control"
+                          placeholder="Search"
+                          value={searchTerm}
+                          onChange={handleSearchChange}
+                        />
+                        <button className="btn btn-outline-light" type="button" onClick={handleSearch}>
+                          <i className="bi bi-search"></i>
                         </button>
                       </div>
                     </div>
@@ -187,7 +222,7 @@ const OrdersTable = () => {
                   <td>{order.name}</td>
                   <td>{order.email}</td>
                   <td>0{order.phone}</td>
-                  <td>{order.date_create}</td>
+                  <td>{formatDateString(order.date_create)}</td>
                   <td>{order.TotalAmount}.000 VNĐ</td>
                   <td>
                     <span className={`px-4 py-2 badge border ${getStatus(order.status).color}`}> {getStatus(order.status).text}</span>
@@ -357,3 +392,7 @@ const OrdersTable = () => {
 };
 
 export default OrdersTable;
+
+
+
+

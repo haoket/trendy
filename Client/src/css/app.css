@@ -962,7 +962,9 @@ footer ul li {
         display: flex;
     }
 
-    .header-wrapper {
+
+
+    #header-wrapper {
         display: flex;
         flex-direction: column;
         height: 100vh;
@@ -976,7 +978,7 @@ footer ul li {
         transition: right 0.3s ease-in-out;
     }
 
-    .header-wrapper.active {
+    #header-wrapper.active {
         right: 0;
     }
 
