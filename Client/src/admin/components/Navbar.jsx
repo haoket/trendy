@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export const Navbar = () => {
   const handleLogout = () => {
     localStorage.removeItem('user');
@@ -10,10 +12,10 @@ export const Navbar = () => {
       <div className="flex justify-between items-center">
         <div className=" text-white sm:text-2xl ms:mt-3 sm:ml-3 font-semibold">
           <div className="menu-header">
-            <a href="./dashboard.html" className="menu-header-logo">
+            <Link to="/admin" className="menu-header-logo">
 
               <span>ADMIN </span>
-            </a>
+            </Link>
             <a href="#" className="btn btn-sm menu-close-btn">
               <i className="bi bi-x"></i>
             </a>

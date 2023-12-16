@@ -76,7 +76,7 @@ export const Dashboard = () => {
                 <div className="d-md-flex align-items-center mb-3">
                   <div className="d-flex align-items-center">
                     <div className="display-7 me-3">
-                      <i className="bi bi-bag-check me-2 text-success"></i> ${totalSales}
+                      <i className="bi bi-bag-check me-2 text-success"></i> {totalSales}.000 VNĐ
                     </div>
                   </div>
 

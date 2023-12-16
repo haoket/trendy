@@ -15,6 +15,59 @@ const schema = yup.object().shape({
 const Category = () => {
     const [data, setData] = useState([]);
     const [openModal, setOpenModal] = useState(false);
+    const [keyword, setKeyword] = useState('');
+    const [currentPage, setCurrentPage] = useState(1);
+    const productsPerPage = 3;
+    const [sortCategory, setSortCategory] = useState('');
+
+
+
+    const handleSortCategoryChange = (e) => {
+        setSortCategory(e.target.value);
+        const sortedcategory = [...data].sort((a, b) => {
+            if (e.target.value === 'desc') {
+                return a.ID - b.ID;
+            } else if (e.target.value === 'asc') {
+                return b.ID - a.ID;
+            }
+            return 0; // Nếu giá trị không phải 'asc' hoặc 'desc', trả về 0 để không làm thay đổi thứ tự
+        });
+
+        setData(sortedcategory);
+    };
+    const handleSearch = async () => {
+        await fetchCategory();
+
+
+        if (keyword === '') {
+
+            return;
+        } else {
+            const filterCategory = data.filter((item) => {
+                const nameMatch = item.Name && item.Name.toLowerCase().includes(keyword.toLowerCase());
+                // Sử dụng startsWith() để kiểm tra xem số điện thoại bắt đầu bằng keyword hay không
+
+
+                return nameMatch;
+            }
+            );
+            setData(filterCategory);
+            console.log('====================================');
+            console.log(filterCategory);
+            console.log('====================================');
+        }
+
+
+    };
+
+    // Calculate the index of the last product on the current page
+    const indexOfLastProduct = currentPage * productsPerPage;
+    // Calculate the index of the first product on the current page
+    const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+    // Get the current products to display
+    const currentProduct = data.slice(indexOfFirstProduct, indexOfLastProduct);
+
+    const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
     const fetchCategory = async () => {
         try {
@@ -67,33 +120,68 @@ const Category = () => {
 
     return (
         <>
-            <div class="mb-4 mt-10 px-4">
+            <div className="mb-4 mt-10 px-4">
                 <nav style={{ "--bs-breadcrumb-divider": ">" }} aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item">
-                            <a href="#">
-                                <i class="bi bi-globe2 small me-2"></i> Dashboard
-                            </a>
-                        </li>
-                        <li class="breadcrumb-item active" aria-current="page">Category</li>
-                    </ol>
+                    <div className="d-md-flex gap-4 align-items-center">
+                        <form className="mb-3 mb-md-0">
+                            <div className="row g-3">
+                                <div className="col-md-6">
+                                    <select className="form-select" value={sortCategory} onChange={handleSortCategoryChange}>
+                                        <option value="">...</option>
+                                        <option value="desc">Tăng</option>
+                                        <option value="asc">Giảm</option>
+
+                                    </select>
+                                </div>
+                                <div className="col-md-6  flex">
+                                    <div className="input-group  ">
+                                        <input
+                                            type="text"
+                                            className=" form-control"
+                                            placeholder="Tìm kiếm"
+                                            value={keyword}
+                                            onChange={(e) => setKeyword(e.target.value)}
+                                        />
+                                    </div>
+                                    <div width="100px">
+                                        {keyword && (
+                                            <button className=" font-bold  p-[3px] rounded absolute right-10 " type="button" onClick={() => {
+                                                setKeyword('');
+                                                fetchCategory();
+                                            }}>
+                                                <i className="bi bi-x"></i>
+                                            </button>
+
+
+                                        )}
+
+                                        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold p-[9px] ml-1 rounded" type="button" onClick={handleSearch}>
+
+                                            <i className="bi bi-search text-sm"></i>
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </nav>
             </div>
             {openModal && (
-                <Modal show={openModal} onHide={() => setOpenModal(false)} className="absolute top-1/2 left-1/2 bg-gray-200 transform -translate-x-1/2 -translate-y-1/2 w-1/2  rounded ">
+                <Modal show={openModal} onHide={() => setOpenModal(false)} className="transform -translate-x-1/2 -translate-y-1/2 bg-gray-200 w-1/2 rounded ">
                     <Modal.Header className="flex justify-center items-center">
                         <h1 className="text-2xl font-bold mb-2 text-center text-gray-800 py-2 px-4">
-                            Add new Category
+                            Thêm danh mục
                         </h1>
                     </Modal.Header>
-                    <Modal.Body className="flex justify-center items-center">
+                    <Modal.Body className="flex justify-center items-center mt-20 ">
                         <form className="max-w-sm m-6" onSubmit={handleSubmit(onSubmit)}>
                             <div className="mb-4">
                                 <label
                                     className="block text-gray-700 text-sm font-bold mb-2"
                                     htmlFor="categoryName"
                                 >
-                                    Category Name
+                                    Tên danh mục
                                 </label>
                                 <Controller
                                     name="categoryName"
@@ -103,7 +191,7 @@ const Category = () => {
                                             {...field}
                                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                             type="text"
-                                            placeholder="Enter category name"
+                                            placeholder="Nhập tên danh mục"
                                         />
                                     )}
                                 />
@@ -117,7 +205,7 @@ const Category = () => {
                                     className="block text-gray-700 text-sm font-bold mb-2"
                                     htmlFor="categoryDescription"
                                 >
-                                    Category Description
+                                    Mô tả danh mục
                                 </label>
                                 <Controller
                                     name="categoryDescription"
@@ -127,7 +215,7 @@ const Category = () => {
                                             {...field}
                                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                             rows="3"
-                                            placeholder="Enter description"
+                                            placeholder="Nhập mô tả"
                                         />
                                     )}
                                 />
@@ -152,7 +240,7 @@ const Category = () => {
                                             {...field}
                                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                             type="text"
-                                            placeholder="Enter category slug"
+                                            placeholder="Nhập slug"
                                         />
                                     )}
                                 />
@@ -161,24 +249,25 @@ const Category = () => {
                                 )}
                             </div>
 
-                            <button
-                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded mb-2  "
-                                type="submit"
-                            >
-                                Add
-                            </button>
+
                         </form>
                     </Modal.Body>
                     <Modal.Footer className="flex justify-center items-center mb-2">
+                        <Button
+                            className="bg-blue-700 hover:bg-blue-200 text-white font-bold py-1 px-2 rounded mb-1 mr-2  "
+                            type="submit"
+                        >
+                            Thêm
+                        </Button>
                         <Button
                             variant="secondary"
                             onClick={() => {
                                 setOpenModal(false);
                                 reset();
                             }}
-                            className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-1 px-2 rounded mb-1 mr-2 "
+                            className="bg-red-700 hover:bg-red-200 text-white font-bold py-1 px-2 rounded mb-1 mr-2 "
                         >
-                            Close
+                            Đóng
                         </Button>
                     </Modal.Footer>
                 </Modal>
@@ -186,13 +275,13 @@ const Category = () => {
 
             <div className="relative">
                 <h1 className="text-2xl font-bold mb-2 text-center text-gray-800 py-2 px-4">
-                    Category
+                    Danh mục
                 </h1>
                 <button
                     onClick={() => setOpenModal(true)}
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-10 ml-10 rounded"
                 >
-                    Add Category
+                    Thêm danh mục
                 </button>
             </div>
 
@@ -203,10 +292,10 @@ const Category = () => {
                             ID
                         </th>
                         <th className="py-2 text-left px-4 border bg-gray-200 text-gray-600 font-bold uppercase text-sm border-b">
-                            Category
+                            Tên danh mục
                         </th>
                         <th className="py-2 text-left px-4 bg-gray-200 text-gray-600 font-bold uppercase text-sm border-b">
-                            Description
+                            Mô tả
                         </th>
                         <th className="py-2 text-left px-4 bg-gray-200 text-gray-600 font-bold uppercase text-sm border-b">
                             Slug
@@ -214,8 +303,8 @@ const Category = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {data.map((item) => (
-                        <tr key={item.id}>
+                    {currentProduct.map((item, index) => (
+                        <tr key={index}>
                             <td className="py-2 px-4 border-b">{item.ID}</td>
                             <td className="py-2 px-4 border-b">{item.Name}</td>
                             <td className="py-2 px-4 border-b">{item.Description}</td>
@@ -225,19 +314,31 @@ const Category = () => {
                                     className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded mr-2 mb-1"
                                     onClick={() => handleDelete(item.ID)}
                                 >
-                                    Delete
+                                    <i className="bi bi-trash"></i>
                                 </button>
                                 <button
                                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
                                     onClick={() => handleUpdate(item.ID)}
                                 >
-                                    Update
+                                    <i className="bi bi-pencil-square"></i>
                                 </button>
                             </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
+
+            <div className="box">
+                <ul className="pagination">
+                    {Array.from({ length: Math.ceil(data.length / productsPerPage) }, (_, index) => (
+                        <li key={index} className={currentPage === index + 1 ? "active bg-green-500" : ""}>
+                            <a href="#" onClick={() => paginate(index + 1)}>
+                                {index + 1}
+                            </a>
+                        </li>
+                    ))}
+                </ul>
+            </div>
         </>
     );
 };

@@ -99,6 +99,9 @@ const Comment = () => {
         <>
 
             <ToastContainer />
+            <h1 className="text-2xl font-bold mb-2 text-center text-gray-800 py-2 px-4">
+                Danh sách bình luận
+            </h1>
             {/* Modal trả lời */}
             {isReplyModalOpen && (
                 <div className='fixed inset-0 flex items-center justify-center z-50'>
@@ -171,7 +174,7 @@ const Comment = () => {
                             <td className="py-2 px-4 border-b">{item.content}</td>
                             <td className="py-2 px-4 border-b">
                                 {item.content_reply ? (
-                                    <span >Đã trả lời: <i>{item.content_reply}</i></span>
+                                    <span >Đã trả lời: <p className="font-italic">{item.content_reply}</p></span>
                                 ) : (
                                     <span > Chưa trả lời</span>
                                 )}
@@ -186,7 +189,7 @@ const Comment = () => {
                                             onClick={() => handleDelete(item)}
 
                                         >
-                                            Xóa
+                                            <i className="bi bi-trash"></i>
                                         </button>
 
                                         <button
@@ -194,7 +197,7 @@ const Comment = () => {
                                             onClick={() => handleReply(item)}
 
                                         >
-                                            Trả lời
+                                            <i className="bi bi-reply-all"></i>
                                         </button>
                                     </>
                                 ) : (
@@ -202,7 +205,7 @@ const Comment = () => {
                                         className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded mr-2 mb-1"
                                         onClick={() => handleDelete(item)}
                                     >
-                                        Xóa
+                                        <i className="bi bi-trash"></i>
                                     </button>
                                 )}
                             </td>

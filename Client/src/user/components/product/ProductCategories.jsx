@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { apiDomain } from '../../../utils/utilsDomain';
 import { ToastContainer, toast } from 'react-toastify';
 import { getCategory, getProductBySlug } from "../../../utils/apiCalls";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 import Loading from "../amination/Loading";
 //Lấy danh sách sản phẩm
@@ -13,6 +14,27 @@ const ProductCategories = () => {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 6;
+  const [selectedOption, setSelectedOption] = useState('');
+
+
+  const handleSortChange = (event) => {
+    // Lấy giá trị được chọn từ thẻ select và set vào state
+    const selectedValue = event.target.value;
+    setSelectedOption(selectedValue);
+
+    switch (selectedValue) {
+      case 'price-asc':
+        setDataProduct([...dataProduct].sort((a, b) => a.Price - b.Price));
+        break;
+      case 'price-desc':
+        setDataProduct([...dataProduct].sort((a, b) => b.Price - a.Price));
+        break;
+      default:
+        // Nếu không có case nào khớp, không làm gì cả
+        break;
+    }
+  };
+
 
   //lấy data product by category
   const parseImageLink = (imageLink) => {
@@ -73,9 +95,11 @@ const ProductCategories = () => {
         <div className="container">
           <div className="box">
             <div className="breadcumb">
-              <Link to="/">home</Link>
+              <Link to="/">Trang chủ</Link>
               <span><i className='bx bxs-chevrons-right'></i></span>
-              <Link to='/products'>all products</Link>
+              <Link to='/products'>Tất cả sản phẩm</Link>
+              <span><i className='bx bxs-chevrons-right'></i></span>
+              <span>{slug}</span>
             </div>
           </div>
           <div className="box">
@@ -88,12 +112,23 @@ const ProductCategories = () => {
                   {data.length > 0 && data.map((item, index) => (
                     <ul key={index} className="flex  text-[#7f7f7f] mb-3 ">
                       <li className="hover:text-[#f42c37]  cursor-pointer hover:font-bold"  >
-                        <Link to={`/products/${item.slug}`} >
+                        <Link to={`/products/${item.slug}`} className={item.slug === slug ? 'text-[#f42c37] font-bold' : ''} >
                           {item.Name}
                         </Link>
                       </li>
                     </ul>
                   ))}
+                </div>
+                <div>
+                  <h1 className="text-black mb-3 bg-[#f2f2f2] p-2 mt-5">Lọc <FontAwesomeIcon className="text-red-500" icon="fa-solid fa-filter" /></h1>
+                  <select value={selectedOption} id="" onChange={handleSortChange}>
+                    <option value="">chọn</option>
+                    <option value="price-asc" >
+                      Giá thấp đến cao
+                    </option>
+                    <option value="price-desc">Giá từ cao đến thấp</option>
+
+                  </select>
                 </div>
               </div>
               <div className="col-12 col-md-9">
@@ -107,7 +142,8 @@ const ProductCategories = () => {
                         <div className="row" id="latest-products">
                           {currentProducts.map((product, index) => (
                             <div className="col-12 col-md-4 col-sm-6" key={index}>
-                              <div className="product-card">
+                              <div className="product-card col-12">
+
                                 < div className="product-card-img" >
                                   <img src={apiDomain + "/image/" + parseImageLink(product.ImageLink)[0]} alt="" />
                                   <img src={apiDomain + "/image/" + parseImageLink(product.ImageLink)[1]} alt="" />

@@ -52,6 +52,16 @@ export const Order = () => {
         }
     }
 
+
+    const getInfoUser = async () => {
+
+        const { data } = await axios.get(`${apiDomain}/users/${user.id}`);
+        setPhone(data.phone);
+        setName(data.name);
+        setAddress(data.address);
+
+    }
+
     const MemoizedPayPalButton = React.memo(() => (
         <PayPalButton
             amount={totalPrice}
@@ -138,8 +148,9 @@ export const Order = () => {
 
     useEffect(() => {
         getCartItems();
-        console.log(cartItems);
+
         calculateTotalPrice();
+        getInfoUser();
 
     }, [isLoading]);
 
@@ -184,62 +195,73 @@ export const Order = () => {
 
     return (
 
-        <div className='flex flex-col px-16'>
+        <div className='flex flex-col px-16 lg:mt-10 mt-[-70px] lg:px-[15%]'>
+            <div className=' text-[20px] py-4 text-center text-red-500'>Quý khách vui lòng xác nhận thông tin chính xác trước khi đặt hàng</div>
             <ToastContainer />
-            <h1 className='font-bold text-xl'>Thông tin thanh toán:</h1>
+            <div className="row">
+                <div className="col-12 col-md-6 wrap p-2 bg-gray-300 rounded-md ml-[-17px] mr-[12px]">
+                    <h1 className='font-bold text-xl'>Thông tin thanh toán:</h1>
 
-            <p>Tên khách hàng</p>
-            <input type="text" className='border border-gray rounded-md w-2/3 px-2 py-1' value={user.name} onChange={(e) => setName(e.target.value)} />
+                    <p>Tên khách hàng</p>
+                    <input type="text" className='border border-gray rounded-md w-2/3 px-2 py-1' value={name} onChange={(e) => setName(e.target.value)} />
 
-            <p>Số điện thoại nhận hàng</p>
-            <input type="text" className='border border-gray rounded-md w-2/3 px-2 py-1' onChange={(e) => setPhone(e.target.value)} />
+                    <p>Số điện thoại nhận hàng</p>
+                    <input type="text" pattern='[0-9]{10}' className='border border-gray rounded-md w-2/3 px-2 py-1' value={phone} onChange={(e) => setPhone(e.target.value)} />
 
-            <p>Địa chỉ nhận hàng</p>
-            <input type="text" onChange={(e) => setAddress(e.target.value)} className='border border-gray rounded-md w-2/3 px-2 py-1' />
-            <table className='mt-4 '>
-                <thead>
-                    <tr className='border-b-4' >
-                        <th><p className='text-left'>Sản phẩm</p></th>
-                        <th><p className='text-center'>Đơn giá</p></th>
-                        <th><p className='text-left'>Số lượng</p></th>
-                        <th><p className='text-right'>Thành tiền</p></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {cartItems.map((item) => (
-                        <tr key={item.cart_id}>
-                            <td><p className='text-left'>{item.Name}</p></td>
-                            <td><p className='text-center'>{item.price / item.quantity}</p></td>
-                            <td><p className='text-left'>{item.quantity}</p></td>
-                            <td><p className='text-right'>{item.price}</p></td>
-                        </tr>
-                    ))}
-
-                    <tr className='border-b-4 border-t-4'>
-                        <td><p className='text-left m-2' onChange={(e) => setMessage(e.target.value)}>Lời nhắn <input type="text" className='border border-gray rounded-md w-2/3 px-2 py-1 ml-4' /></p>
-
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colSpan={4}><p className='text-right'>Tổng tiền: {totalPrice}</p> </td>
-                    </tr>
-                </tbody>
-            </table>
-            <div><p className='font-bold text-xl'>Phương thức thanh toán</p></div>
-            <select name="method_payment" onChange={(e) => setMethod_payment(e.target.value)} className='border border-gray rounded-md w-1/5 px-2 py-1 mt-4 mb-4'>
-                <option value="COD">COD</option>
-                <option value="paypal">PayPal</option>
-
-            </select>
-
-            {method_payment === "paypal" && sdkReady ? (
-                <MemoizedPayPalButton />
-            ) : (
-                <button onClick={createOrder} className='bg-red-500 w-80 hover:bg-red-700 text-white px-8 py-3 text-[#666666] rounded-1xl cursor-pointer' >Đặt hàng</button>
-            )}
+                    <p>Địa chỉ nhận hàng</p>
+                    <input type="text" value={address} onChange={(e) => setAddress(e.target.value)} className='border border-gray rounded-md w-2/3 px-2 py-1' />
+                    <table className='mt-4 '>
+                        <thead>
+                            <tr className='border-b-4' >
+                                <th><p className='text-left'>Sản phẩm</p></th>
+                                <th><p className='text-center'>Đơn giá</p></th>
+                                <th><p className='text-left'>Số lượng</p></th>
+                                <th><p className='text-right'>Thành tiền</p></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {cartItems.map((item) => (
+                                <tr key={item.cart_id}>
+                                    <td className='flex p-2'>
+                                        <img width={"50px"} height={"50px"} src={apiDomain + "/image/" + parseImageLink(item.ImageLink)} alt={item.Name} /><p className='text-left flex p-2'>
 
 
+                                            {item.Name}</p></td>
+                                    <td><p className='text-center'>{item.price / item.quantity}.000 VNĐ</p></td>
+                                    <td><p className='text-left'>{item.quantity}</p></td>
+                                    <td><p className='text-right'>{item.price}.000 VNĐ</p></td>
+                                </tr>
+                            ))}
 
+                            <tr className='border-b-4 border-t-4'>
+                                <td><p className='text-left m-2' onChange={(e) => setMessage(e.target.value)}>Lời nhắn <input type="text" className='border border-gray rounded-md w-2/3 px-2 py-1 ml-4' /></p>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colSpan={4}><p className='text-right'><span className='font-bold'>Tổng tiền:</span> {totalPrice}.000 VNĐ</p> </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div className=" flex  flex-col col-12 col-md-6 overflow-hidden bg-[#e2e2e2] h-[220px] sm:h-[270px] md:h-[245px] lg:h-[240px] rounded-md p-3">
+                    <div><p className='font-bold '>Phương thức thanh toán</p></div>
+                    <select name="method_payment" onChange={(e) => setMethod_payment(e.target.value)} className='border border-gray rounded-md w-full px-2 py-1 mt-4 mb-4'>
+                        <option value="COD" >Thanh toán khi nhận hàng</option>
+                        <option value="paypal">PayPal</option>
+
+                    </select>
+
+                    {method_payment === "paypal" && sdkReady ? (
+
+                        <MemoizedPayPalButton className='z-[-12]' />
+
+                    ) : (
+                        <button onClick={createOrder} className='bg-red-500 w-80 hover:bg-red-700 text-white px-8 py-3 text-[#666666] rounded-1xl cursor-pointer center' >Đặt hàng</button>
+                    )}
+
+                </div>
+            </div>
 
         </div>
     )

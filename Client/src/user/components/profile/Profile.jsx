@@ -284,9 +284,9 @@ export const Profile = () => {
                 <h1 className='font-bold text-xl '>Đơn hàng gần đây</h1>
 
                 {Order && Order.map((item, index) => (
-                    <div className={`relative ${detailOrder === item.ID ? 'active' : ''}`} key={index}>
+                    <div className={`mt-10 relative ${detailOrder === item.ID ? 'active' : ''}`} key={index}>
                         {detailOrder === item.ID && (
-                            <div className={`order-details ${detailOrder === item.ID ? 'active' : ''}`}>
+                            <div className={`mt-[150px] order-details ${detailOrder === item.ID ? 'active' : ''}`}>
                                 <div>
                                     <p className='font-bold text-xl'>Chi tiết đơn hàng</p>
 
@@ -304,7 +304,7 @@ export const Profile = () => {
                                     {item.isPaid == 1 ? <p>Trạng thái thanh toán: Đã thanh toán</p> : <p>Trạng thái thanh toán: Chưa thanh toán</p>}
 
 
-                                    <table className="table table-hover shopping-cart-wrap">
+                                    <table className="table table-hover shopping-cart-wrap ">
                                         <thead className="text-muted">
                                             <tr>
                                                 <th scope="col">Sản phẩm</th>

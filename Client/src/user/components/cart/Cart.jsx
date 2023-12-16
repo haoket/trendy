@@ -87,52 +87,54 @@ const Cart = () => {
       <ToastContainer />
 
       <section className="section-content bg padding-y border-top">
+        <div className="bg-[#e2e2e2] w-screen p-16  mb-8 ">
+
+          <i className="flex flex-col items-center w-full">
+            <h1 className="font-bold text-4xl ">Giỏ hàng của bạn</h1>
+          </i>
+        </div>
         <div className="container">
 
           <div className="row">
-            <main className="col-sm-12">
+            <main className=" col-12 col-md-8">
 
 
-              <div className="card wrap table-responsive">
+              <div className="card wrap table-responsive border-none">
                 {!cartItems[0] && <CartFallback />}
                 {cartItems && (
-                  <table className="table table-hover shopping-cart-wrap">
-                    <thead className="text-muted">
-                      <tr>
-                        <th scope="col">Product</th>
-                        <th scope="col" >Quantity</th>
-                        <th scope="col" >Price</th>
-                        <th scope="col" className="text-right" >Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {cartItems.map((item, index) => (
-                        <tr key={index}>
-                          <td>
-                            <figure className="media">
-                              <div className="img-wrap"><img src={apiDomain + "/image/" + parseImageLink(item.ImageLink)} className="img-thumbnail img-sm" /></div>
-                              <figcaption className="media-body">
-                                <h6 className="title text-truncate">{item.Name} </h6>
-                              </figcaption>
-                            </figure>
-                          </td>
-                          <td>
-                            <span>Số lượng: {item.quantity}</span>
-                          </td>
-                          <td>
-                            <div className="price-wrap">
-                              <var className="price">{item.price}.000VNĐ</var>
-                            </div>
-                            {/* <!-- price-wrap .// --> */}
-                          </td>
-                          <td className="text-right">
-                            <button className="btn btn-outline-danger" onClick={() => handleRemoveItem(item.cart_id)}> × Remove</button>
-                          </td>
+                  <div class="overflow-x-auto">
+                    <table class="min-w-full table-auto">
+                      <thead class="bg-gray-200">
+                        <tr>
+                          <th class="px-4 py-2">Sản phẩm</th>
+                          <th class="px-4 py-2">Số lượng</th>
+                          <th class="px-4 py-2">Giá</th>
+                          <th class="px-4 py-2 text-right">Hành động</th>
                         </tr>
-                      ))}
-
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody>
+                        {cartItems.map((item, index) => (
+                          <tr key={index} class="border-t">
+                            <td class="px-4 py-2">
+                              <div class="flex items-center">
+                                <div class="w-12 h-12 overflow-hidden">
+                                  <img src={apiDomain + "/image/" + parseImageLink(item.ImageLink)} class="object-cover w-full h-full" alt={item.Name} />
+                                </div>
+                                <div class="ml-4">
+                                  <h6 class="text-sm font-medium">{item.Name}</h6>
+                                </div>
+                              </div>
+                            </td>
+                            <td class="px-4 py-2">{item.quantity}</td>
+                            <td class="px-4 py-2">{item.price}.000VNĐ</td>
+                            <td class="px-4 py-2 text-right">
+                              <button class="text-red-500 hover:bg-red-700 hover:text-white font-bold py-2 px-4 rounded" onClick={() => handleRemoveItem(item.cart_id)}><i className="bi bi-trash"></i></button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 )}
 
               </div>
@@ -140,8 +142,8 @@ const Cart = () => {
 
             </main>
             {/* <!-- col.// --> */}
-            <aside className="col-sm-3">
-              <p className="alert alert-success">Add USD 5.00 of eligible items to your order to qualify for FREE Shipping. </p>
+            <aside className="col-12 col-md-4">
+              <p className="alert alert-success">Nhấn thanh toán để tiếp tục</p>
               {/* <dl class="dlist-align">
                 <dt>Total price: </dt>
                 <dd class="text-right">USD 568</dd>
@@ -151,7 +153,7 @@ const Cart = () => {
                 <dd class="text-right">USD 658</dd>
               </dl> */}
               <dl className="dlist-align h4">
-                <dt>Total:</dt>
+                <dt>Tổng:</dt>
                 <dd className="text-right"><strong>{totalPrice}.000VNĐ</strong></dd>
               </dl>
               <hr />

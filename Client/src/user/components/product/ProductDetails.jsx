@@ -23,6 +23,12 @@ const ProductDetails = () => {
 
 
 
+  const formatDateString = (dateString) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    const formattedDate = new Date(dateString).toLocaleDateString(undefined, options);
+    return formattedDate;
+  };
+
   const truncateDescription = (description) => {
     const maxLength = 1000; // Độ dài tối đa của mô tả ngắn gọn
     if (description.length > maxLength) {
@@ -187,19 +193,19 @@ const ProductDetails = () => {
         <div className="container">
           <div className="box">
             <div className="breadcumb">
-              <Link to="/">home</Link>
+              <Link to="/">Trang chủ</Link>
               <span><i className='bx bxs-chevrons-right'></i></span>
-              <Link to="/products">products</Link>
+              <Link to="/products">Sản phẩm</Link>
               <span><i className='bx bxs-chevrons-right'></i></span>
-              <a href="#">{product.Name}</a>
+              <a href="#" className='font-bold'>{product.Name}</a>
             </div>
           </div>
           <div className="row product-row">
-            <div className="col-5 col-md-4">
+            <div className="col-12 col-md-8">
               <div className="product-img" id="product-img">
                 <img src={apiDomain + "/image/" + listImg[0]} alt="" />
               </div>
-              <div className="box">
+              <div className="box ">
                 <div className="product-img-list">
                   <div className="product-img-item">
                     <img src={apiDomain + "/image/" + listImg[1]} alt="" />
@@ -213,10 +219,10 @@ const ProductDetails = () => {
                 </div>
               </div>
             </div>
-            <div className="col-7 col-md-8">
+            <div className="col-12 col-md-4">
               <div className="product-info">
-                <h1>
-                  {product.Name}
+                <h1 >Tên sản phẩm:
+                  <p className='font-bold'>{product.Name}</p>
                 </h1>
                 <div className="product-info-detail">
                   <span className="product-info-detail-title">Loại sản phẩm:</span>
@@ -241,16 +247,16 @@ const ProductDetails = () => {
                   </span>
                 </div>
                 <div>
-                  <button className="btn-flat btn-hover" onClick={() => handleAddToCart(product.ID)}>add to cart</button>
+                  <button className="btn-flat btn-hover" onClick={() => handleAddToCart(product.ID)}>Thêm vào giỏ hàng</button>
                 </div>
               </div>
             </div>
           </div>
-          <div className="box">
-            <div className="box-header">
+          <div className="box md:px-[10%]">
+            <div className="box-header ">
               Chi tiết sản phẩm
             </div>
-            <div className="product-detail-description">
+            <div className="product-detail-description ">
               <ReactQuill
                 theme="snow"
                 value={showFullDescription ? product.Description : truncateDescription(product.Description)}
@@ -294,7 +300,7 @@ const ProductDetails = () => {
                       <div className="flex-grow-1 ms-2 ms-sm-3">
                         <div className="comment-meta d-flex align-items-baseline">
                           <h6 className="me-2">{comment.name}</h6>
-                          <span className="text-muted">{comment.date_create}</span>
+                          <span className="text-muted">{formatDateString(comment.date_create)}</span>
                         </div>
                         <div className="comment-body">
                           {comment.content}
@@ -310,10 +316,10 @@ const ProductDetails = () => {
                               <div className="flex-grow-1 ms-2 ms-sm-3">
                                 <div className="reply-meta d-flex align-items-baseline">
                                   <h6 className="mb-0 me-2">BeautyShop</h6>
-                                  <span className="text-muted">{comment.date_reply}</span>
+                                  <span className="text-muted">{formatDateString(comment.date_reply)}</span>
                                 </div>
                                 <div className="reply-body">
-                                  {comment.content_reply}
+                                  {formatDateString(comment.content_reply)}
                                 </div>
                               </div>
                             </div>

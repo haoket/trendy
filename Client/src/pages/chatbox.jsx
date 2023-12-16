@@ -118,11 +118,11 @@ const ChatComponent = () => {
                     <div className="chatbox__support chatbox--active">
                         <div className="chatbox__header">
                             <div className="chatbox__image--header">
-                                <img src="https://img.icons8.com/color/48/000000/circled-user-female-skin-type-5--v1.png" alt="image" />
+                                <img src="https://vi.seaicons.com/wp-content/uploads/2016/08/shop-icon.png" width="30" height="30" alt="image" />
                             </div>
                             <div className="chatbox__content--header">
-                                <h4 className="chatbox__heading--header">Chat support</h4>
-                                <p className="chatbox__description--header">Hi. My name is Sam. How can I help you?</p>
+                                <h4 className="chatbox__heading--header">Trò chuyện nhanh</h4>
+                                <p className="chatbox__description--header">Beauty shop hân hạnh phục vụ bạn!</p>
                             </div>
                         </div>
                         <div className="chatbox__messages">
@@ -131,14 +131,14 @@ const ChatComponent = () => {
                         <div className="chatbox__footer">
                             <input type="text" placeholder="Write a message..." value={inputText}
                                 onChange={(e) => setInputText(e.target.value)} />
-                            <button className="chatbox__send--footer send__button" >Send</button>
+                            <button className="chatbox__send--footer send__button" ><i className="bi bi-send-fill text-3xl"></i></button>
                         </div>
                     </div>
 
                 )}
 
                 <div className="chatbox__button">
-                    <button><img src="https://img.icons8.com/color/48/000000/circled-user-female-skin-type-5--v1.png" /></button>
+                    <button><img width={50} height={50} src="https://cdn-icons-png.flaticon.com/512/4213/4213934.png" /></button>
                 </div>
             </div>
         </div>

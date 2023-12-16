@@ -13,18 +13,18 @@ body {
 
 *,
 html {
-    --primaryGradient: linear-gradient(93.12deg, #581B98 0.52%, #9C1DE7 100%);
-    --secondaryGradient: linear-gradient(268.91deg, #581B98 -2.14%, #9C1DE7 99.69%);
+    --primaryGradient: linear-gradient(93.12deg, #e00911 0.52%, #db1471 100%);
+    --secondaryGradient: linear-gradient(93.12deg, #e00911 0.52%, #db1471 100%);
     --primaryBoxShadow: 0px 10px 15px rgba(0, 0, 0, 0.1);
     --secondaryBoxShadow: 0px -10px 15px rgba(0, 0, 0, 0.1);
-    --primary: #581B98;
+    --primary: #0856b6;
 }
 
 /* CHATBOX
 =============== */
 .chatbox {
     position: fixed;
-    bottom: 30px;
+    bottom: 10px;
     right: 0;
 }
 
@@ -33,8 +33,8 @@ html {
     display: flex;
     flex-direction: column;
     background: #eee;
-    width: 300px;
-    height: 350px;
+    width: 200px;
+    height: 200px;
     z-index: -123456;
     opacity: 0;
     transition: all .5s ease-in-out;
@@ -42,7 +42,7 @@ html {
 
 /* CONTENT ISOPEN */
 .chatbox--active {
-    transform: translateY(-40px);
+
     z-index: 123456;
     opacity: 1;
     z-index: 4;
@@ -101,7 +101,7 @@ html {
 .chatbox__support {
     background: #f9f9f9;
     height: 450px;
-    width: 350px;
+    width: 300px;
     box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
@@ -114,7 +114,7 @@ html {
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    padding: 15px 20px;
+    padding: 3px 5px;
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
     box-shadow: var(--primaryBoxShadow);
@@ -167,12 +167,12 @@ html {
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    padding: 20px 20px;
+    padding: 5px 10px;
     background: var(--secondaryGradient);
     box-shadow: var(--secondaryBoxShadow);
-    border-bottom-right-radius: 10px;
-    border-bottom-left-radius: 10px;
-    margin-top: 20px;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    margin-top: 10px;
 }
 
 .chatbox__footer input {

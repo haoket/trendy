@@ -201,6 +201,7 @@ export const getAllOrder = async (req, res) => {
         o.phone,
         o.TotalAmount,
         p.name AS Name, 
+        p.ImageLink AS img,
         u.name AS name
       FROM
         orders o
@@ -244,6 +245,7 @@ export const getAllOrder = async (req, res) => {
           Quantity: row.Quantity,
           Price: row.Price,
           Name: row.Name,
+          img: row.img
         });
       });
 

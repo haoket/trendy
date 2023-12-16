@@ -51,7 +51,7 @@ const Login = () => {
       <div id="left">
         <div id="signin">
           <div className="logo">
-            <Link to="/">TrendyHub </Link>
+            <Link to="/">Beauty </Link>
           </div>
           <form onSubmit={handleSubmit(onSubmit)}>
 
@@ -66,30 +66,29 @@ const Login = () => {
             </div>
             <p className="error">{errors.email?.message}</p>
             <div>
-              <label>Password</label>
+              <label>Mật khẩu</label>
               <input
                 type="password"
                 className="text-input" required {...register("password")}
-                placeholder="enter your pasword"
+                placeholder="Nhập mật khẩu"
               />
             </div>
             <p>{errors.password?.message}</p>
-            <button type="submit" className="btn primary-btn">Login</button>
+            <button type="submit" className="btn primary-btn">Đăng nhập</button>
           </form>
           <div className="links">
-            <Link to="#">Forgot Password </Link>
+            <Link to="#">Quên mật khẩu </Link>
           </div>
           <div className="or">
             <hr className="bar" />
-            <span>OR</span>
+            <span>hoặc</span>
             <hr className="bar" />
           </div>
           <Link to="/auth/signup" className="secondary-btn">
-            Create an account
+            Tạo tài khoản
           </Link>
         </div>
         <footer id="main-footer">
-          <p>Copyright &judicious; 2023, Trendyhub All Rights Reserved</p>
           <div>
             <Link to="/terms">Terms of Use</Link> |{" "}
             <Link to="/policy">Privacy Policy</Link>
@@ -100,10 +99,10 @@ const Login = () => {
         <div id="showcase">
           <div className="showcase-content">
             <h1 className="showcase-text">
-              Not a Member Yet! <strong>No Worries</strong>
+              Không phải là thành viên <strong>Đừng lo lắng</strong>
             </h1>
             <Link to="/auth/signup" className="secondary-btn">
-              Signup Here
+              Đăng ký tại đây
             </Link>
           </div>
         </div>

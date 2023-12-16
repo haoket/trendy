@@ -10,11 +10,10 @@ const OrdersTable = () => {
   const [selectedStatus, setSelectedStatus] = useState('');
   const [isModalOpen, setModalOpen] = useState(false);
   const [iOpenModalDetail, setOpenModalDetail] = useState(false);
-
-  const [perPage, setPerPage] = useState(10);
-  const [sortBy, setSortBy] = useState('ID');
-  const [sortOrder, setSortOrder] = useState('asc');
-  const [searchTerm, setSearchTerm] = useState('');
+  const [sortOrder, setSortOrder] = useState('');
+  const [keyword, setKeyword] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const productsPerPage = 6;
 
 
   const formatDateString = (dateString) => {
@@ -33,6 +32,20 @@ const OrdersTable = () => {
     setSelectedOrder(null);
     setSelectedStatus('');
     setOpenModalDetail(false);
+  };
+
+
+  const parseImageLink = (imageLink) => {
+    try {
+      const img = JSON.parse(imageLink);
+
+      // Lấy tên của hình ảnh đầu tiên và loại bỏ ký tự "\"
+      return img[0].replace(/\\/g, '');
+
+    } catch (error) {
+      console.error('Error parsing ImageLink:', error);
+    }
+    return null;
   };
 
   //lấy dữ liệu đơn hàng
@@ -93,20 +106,24 @@ const OrdersTable = () => {
     }
   };
 
+  // Calculate the index of the last product on the current page
+  const indexOfLastProduct = currentPage * productsPerPage;
+  // Calculate the index of the first product on the current page
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  // Get the current products to display
+  const currentOrder = orders.slice(indexOfFirstProduct, indexOfLastProduct);
 
-
-  const handlePerPageChange = (e) => {
-    setPerPage(e.target.value);
-  };
+  // Change page
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
 
   const handleSortOrderChange = (e) => {
     setSortOrder(e.target.value);
     const sortedOrders = [...orders].sort((a, b) => {
       if (e.target.value === 'asc') {
-        return a.TotalAmount - b.TotalAmount;
+        return a.status - b.status;
       } else if (e.target.value === 'desc') {
-        return b.TotalAmount - a.TotalAmount;
+        return b.status - a.status;
       }
       return 0; // Nếu giá trị không phải 'asc' hoặc 'desc', trả về 0 để không làm thay đổi thứ tự
     });
@@ -114,13 +131,31 @@ const OrdersTable = () => {
     setOrders(sortedOrders);
   };
 
-  const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
-  };
 
-  const handleSearch = () => {
-    // Gọi API tìm kiếm với giá trị searchTerm
-    // Sau đó cập nhật danh sách đơn hàng
+  const handleSearch = async () => {
+    await fetchOrders();
+
+
+    if (keyword === '') {
+
+      return;
+    } else {
+      const filteredOrders = orders.filter((item) => {
+        const nameMatch = item.name && item.name.toLowerCase().includes(keyword.toLowerCase());
+        const emailMatch = item.email && item.email.toLowerCase().includes(keyword.toLowerCase());
+        // Sử dụng startsWith() để kiểm tra xem số điện thoại bắt đầu bằng keyword hay không
+        const phoneMatch = item.phone && item.phone.startsWith(keyword);
+
+        return nameMatch || phoneMatch || emailMatch;
+      }
+      );
+      setOrders(filteredOrders);
+      console.log('====================================');
+      console.log(filteredOrders);
+      console.log('====================================');
+    }
+
+
   };
 
 
@@ -128,62 +163,64 @@ const OrdersTable = () => {
     fetchOrders();
   }, []);
 
-  // const updateOrderStatus = async (orderId, status) => {
-  //   try {
-  //     const response = await axios.put(`${apiDomain}/updateOrderStatus/${orderId}`, { status });
-  //     toast.success(response.data.message);
-  //     fetchOrders();
-  //   } catch (error) {
-  //     console.error('Error updating order status:', error);
-  //   }
-
-  // }
 
   return (
     <div className='container px-4 mt-10'>
 
       {/* <!-- content --> */}
-      <div class="content ">
+      <div className="content ">
 
-        <div class="mb-4">
+        <div className="mb-4">
           <nav style={{ "--bs-breadcrumb-divider": ">" }} aria-label="breadcrumb">
-            <ol class="breadcrumb">
-              <li class="breadcrumb-item">
-                <a href="#">
-                  <i class="bi bi-globe2 small me-2"></i> Dashboard
-                </a>
-              </li>
-              <li class="breadcrumb-item active" aria-current="page">Orders</li>
-            </ol>
+            <h1 className="text-2xl font-bold mb-2 text-center text-gray-800 py-2 px-4">
+              Danh sách đơn hàng
+            </h1>
           </nav>
         </div>
 
-        <div class="card">
-          <div class="card-body">
-            <div class="d-md-flex gap-4 align-items-center">
-              <div class="d-none d-md-flex">All Orders</div>
-              <div class="d-md-flex gap-4 align-items-center">
+        <div className="card">
+          <div className="card-body">
+            <div className="d-md-flex gap-4 align-items-center">
+              <div className="d-none d-md-flex">Tất cả đơn hàng</div>
+              <div className="d-md-flex gap-4 align-items-center">
                 <form className="mb-3 mb-md-0">
                   <div className="row g-3">
-                    <div className="col-md-3">
+                    <div className="col-md-6">
                       <select className="form-select" value={sortOrder} onChange={handleSortOrderChange}>
-                        <option value="desc">Desc</option>
-                        <option value="asc">Asc</option>
+                        <option value="">...</option>
+                        <option value="desc">Tăng</option>
+                        <option value="asc">Giảm</option>
+
                       </select>
                     </div>
-                    <div className="col-md-6">
-                      <div className="input-group">
+                    <div className="col-md-6  flex">
+                      <div className="input-group  ">
                         <input
                           type="text"
-                          className="form-control"
-                          placeholder="Search"
-                          value={searchTerm}
-                          onChange={handleSearchChange}
+                          className=" form-control"
+                          placeholder="Tìm kiếm"
+                          value={keyword}
+                          onChange={(e) => setKeyword(e.target.value)}
                         />
-                        <button className="btn btn-outline-light" type="button" onClick={handleSearch}>
-                          <i className="bi bi-search"></i>
+                      </div>
+                      <div width="100px">
+                        {keyword && (
+                          <button className=" font-bold  p-[3px] rounded absolute right-10 " type="button" onClick={() => {
+                            setKeyword('');
+                            fetchOrders();
+                          }}>
+                            <i className="bi bi-x"></i>
+                          </button>
+
+
+                        )}
+
+                        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold p-[9px] ml-1 rounded" type="button" onClick={handleSearch}>
+
+                          <i className="bi bi-search text-sm"></i>
                         </button>
                       </div>
+
                     </div>
                   </div>
                 </form>
@@ -193,28 +230,28 @@ const OrdersTable = () => {
           </div>
         </div>
 
-        <div class="table-responsive">
-          <table class="table table-custom table-lg mb-0" id="orders">
+        <div className="table-responsive">
+          <table className="table table-custom table-lg mb-0" id="orders">
             <thead>
 
               <tr>
 
                 <th>ID</th>
-                <th>Name</th>
+                <th>Tên khách hàng</th>
                 <th>Email</th>
-                <th>Phone</th>
-                <th>Date</th>
-                <th>Total</th>
-                <th>Status</th>
-                <th class="text-end">Actions</th>
+                <th>SĐT</th>
+                <th>Ngày đặt</th>
+                <th>Tổng tiền</th>
+                <th>Tình trạng</th>
+                <th className="text-end">Hành động</th>
                 <th>
 
                 </th>
               </tr>
             </thead>
             <tbody>
-              {orders.map((order, index) => (
-                <tr>
+              {currentOrder.map((order, index) => (
+                <tr key={index}>
 
                   <td>
                     <a href="#">#{order.ID}</a>
@@ -227,14 +264,14 @@ const OrdersTable = () => {
                   <td>
                     <span className={`px-4 py-2 badge border ${getStatus(order.status).color}`}> {getStatus(order.status).text}</span>
                   </td>
-                  <td class="text-end">
+                  <td className="text-end">
 
                     {order.status != '3' && order.status != '2' && (
                       <button
                         className="bg-blue-500 hover:bg-blue-700 text-white w-full px-2 py-1 rounded"
                         onClick={() => openModal(order)}
                       >
-                        Update Status
+                        Cập nhật trạng thái
                       </button>
                     )}
                     {order.status === '3' && (
@@ -249,15 +286,15 @@ const OrdersTable = () => {
                       </button>
                     )}
                   </td>
-                  <td class="text-end">
-                    <div class="d-flex">
-                      <div class="dropdown ms-auto">
+                  <td className="text-end">
+                    <div className="d-flex">
+                      <div className="dropdown ms-auto">
                         <button data-bs-toggle="dropdown"
-                          class="btn btn-floating"
+                          className="btn btn-floating"
                           aria-expanded="false"
                           onClick={() => openModalDetail(order)}
                         >
-                          <i class="bi bi-three-dots"></i>
+                          <i className="bi bi-three-dots"></i>
                         </button>
                       </div>
                     </div>
@@ -269,23 +306,26 @@ const OrdersTable = () => {
 
               {isModalOpen && (
                 <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center">
-                  <div className="bg-white p-6 rounded shadow-lg w-1/3">
-                    <h3 className="text-xl font-bold mb-4">Update Order Status</h3>
+                  <div className="bg-white p-6 rounded shadow-lg w-4/7">
+                    <h3 className="text-xl font-bold mb-4">Cập nhật trạng thái</h3>
 
                     <h1 className='text-xl font-bold mb-4'>Chi tiết đơn hàng</h1>
 
                     {selectedOrder.products.map((product) => (
-                      <div className='border-2 border-black'>
-                        <p className="mb-2">Tên sản phẩm: {product.Name}</p>
-                        <p className="mb-2">Giá sản phẩm: {product.Price}</p>
-                        <p className="mb-2">Số lượng: {product.Quantity}</p>
+                      <div className='border-gray-100 pt-2'>
+                        <div className='flex'>
+                          <img width={100} height={100} src={apiDomain + "/image/" + parseImageLink(product.img)} alt="" />
+                          <p className="mb-2"><span span className='font-bold'>Tên sản phẩm:</span> {product.Name}</p>
+                        </div>
+                        <p className="mb-2"><span span className='font-bold'>Giá:</span>{product.Price}</p>
+                        <p className="mb-2"><span span className='font-bold'>Số lượng:</span> {product.Quantity}</p>
                         <hr className='border-1 border-black'></hr>
                       </div>
                     ))}
 
-                    <p className="mb-2">Tình trạng đơn hàng: {getStatus(selectedOrder.status).text}</p>
+                    <p className="mb-2"><span span className='font-bold'>Tình trạng đơn hàng:</span> {getStatus(selectedOrder.status).text}</p>
                     <label className="block mb-4">
-                      Cập nhật:
+                      <span span className='font-bold'>Cập nhật:</span>
                       <select
                         className="border rounded w-full px-2 py-1"
                         value={selectedStatus}
@@ -361,23 +401,17 @@ const OrdersTable = () => {
           </table>
         </div>
 
-        <nav class="mt-4" aria-label="Page navigation example">
-          <ul class="pagination justify-content-center">
-            <li class="page-item">
-              <a class="page-link" href="#" aria-label="Previous">
-                <span aria-hidden="true">&laquo;</span>
-              </a>
-            </li>
-            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item">
-              <a class="page-link" href="#" aria-label="Next">
-                <span aria-hidden="true">&raquo;</span>
-              </a>
-            </li>
+        <div className="box">
+          <ul className="pagination">
+            {Array.from({ length: Math.ceil(orders.length / productsPerPage) }, (_, index) => (
+              <li key={index} className={currentPage === index + 1 ? "active bg-green-500" : ""}>
+                <a href="#" onClick={() => paginate(index + 1)}>
+                  {index + 1}
+                </a>
+              </li>
+            ))}
           </ul>
-        </nav>
+        </div>
 
       </div>
       {/* <!-- ./ content --> */}

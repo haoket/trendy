@@ -90,9 +90,9 @@ const ProductList = () => {
         <div className="container">
           <div className="box">
             <div className="breadcumb">
-              <Link to="/">home</Link>
+              <Link to="/">Trang chủ</Link>
               <span><i className='bx bxs-chevrons-right'></i></span>
-              <a href="#">all products</a>
+              <a href="#">Tất cả sản phẩm</a>
             </div>
           </div>
           <div className="box">
@@ -114,7 +114,7 @@ const ProductList = () => {
                   ))}
                 </div>
                 <div>
-                  <h1>Lọc <FontAwesomeIcon icon="fa-solid fa-filter" /></h1>
+                  <h1 className="text-black mb-3 bg-[#f2f2f2] p-2 mt-5">Lọc <FontAwesomeIcon className="text-red-500" icon="fa-solid fa-filter" /></h1>
                   <select value={selectedOption} id="" onChange={handleSortChange}>
                     <option value="">chọn</option>
                     <option value="price-asc" >

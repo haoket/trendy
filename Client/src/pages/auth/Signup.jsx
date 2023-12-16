@@ -40,27 +40,27 @@ const Signup = () => {
   }
 
   return (
-    <div className="signup">
+    <div className="signup ">
       <div className="signup_image">
         <div>
           <h1>
-            Already a Member? <strong>No Worries</strong>
+            Bạn đã là thành viên? <strong>Đừng lo lắng</strong>
           </h1>
           <Link to="/auth/login" className="secondary-btn">
-            Login Here
+            Đăng nhập tại đây
           </Link>
         </div>
       </div>
       <div className="signup_form">
         <form onSubmit={handleSubmit(onSubmit)}>
           {/* <h2>Dont Have an Account?</h2> */}
-          <h1 className="font-bold text-2xl">Register Here</h1>
+          <h1 className="font-bold text-2xl pt-4">Đăng ký thành viên</h1>
           <div>
-            <label>Name</label>
+            <label>Tên</label>
             <input
               type="text"
               className="text-input" required="required"  {...register("name")}
-              placeholder="Enter your Name"
+              placeholder="Nhập tên"
             />
           </div>
           <div>
@@ -68,36 +68,36 @@ const Signup = () => {
             <input
               type="text"
               className="text-input" required="required"  {...register("email")}
-              placeholder="Enter your Email"
+              placeholder="Nhập Email"
             />
           </div>
           <div>
-            <label>Phone</label>
+            <label>Số điện thoại</label>
             <input
-              type="number"
+              type="text"
               className="text-input" required="required"  {...register("phone")}
-              placeholder="Enter your Phone"
+              placeholder="Nhập số điện thoại"
             />
           </div>
           <div>
-            <label>Address</label>
+            <label>Địa chỉ</label>
             <input
               type="text"
               className="text-input" required="required"  {...register("address")}
-              placeholder="Enter your Address"
+              placeholder="Nhập địa chỉ"
             />
           </div>
           <div>
-            <label>Password</label>
+            <label>Mật khẩu</label>
             <input
               type="password"
               className="text-input" required="required"   {...register("password")}
-              placeholder="password"
+              placeholder="Mật khẩu"
             />
           </div>
           <p className="error" style={{ color: "red" }} >{errors.password?.message}</p>
           <div>
-            <label>Confirm Password</label>
+            <label>Nhập lại mật khẩu</label>
             <input
               type="password"
               className="text-input" required="required"   {...register("confirmpassword")}
@@ -106,22 +106,22 @@ const Signup = () => {
           </div>
           <p>{errors.confirmpassword?.message}</p>
           <div className="btn_wrapper">
-            <button className="secondary-btn" type="submit" >Sign Up</button>
+            <button className="secondary-btn" type="submit" >Đăng ký</button>
           </div>
 
           <div className="or">
             <hr className="bar" />
-            <span>OR</span>
+            <span>hoặc</span>
             <hr className="bar" />
           </div>
           <div className="btn_wrapper">
             <Link to="/auth/login" className="secondary-btn">
-              Sign In
+              Đăng nhập
             </Link>
           </div>
 
           <footer className="main-footer">
-            <p>&copy; 2022, Realesto All Rights Reserved</p>
+
             <div>
               <Link to="/terms">Terms of use</Link> |{" "}
               <Link to="/policy">Privacy Policy</Link>

@@ -44,7 +44,7 @@ const Contact = () => {
         {loading ? (
           <Loading />
         ) : (
-          <div className="contact-area d-flex align-items-center mt-5 mb-5">
+          <div className="contact-area d-flex align-items-center mt-5 mb-5 md:px-20">
 
 
             <div className="google-map">
@@ -58,10 +58,13 @@ const Contact = () => {
               <h2>Liên hệ với chúng tôi</h2>
               <p>Chúng tôi hân hạnh đem đến cho khách hàng những sản phẩm chất lượng nhất, cửa hàng chúng tôi luôn đặt uy tín lên hàng đầu.</p>
 
-              <div className="contact-address mt-50">
+              <div className="mt-50">
                 <p><span>Địa chỉ:</span> Hòa Khánh, thành phố Đà Nẵng</p>
                 <p><span>SĐT:</span> 0386043213</p>
-                <p><a href="mailto:contact@essence.com">levanhao0304@gmail.com</a></p>
+
+                <p>
+                  <span>Email:</span>
+                  <a href="mailto:levanhao0304@gmail.com">levanhao0304@gmail.com</a></p>
               </div>
             </div>
 

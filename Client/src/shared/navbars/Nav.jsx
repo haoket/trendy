@@ -13,7 +13,7 @@ import '../../css/grid.css'
 
 
 
-const Navbar = () => {
+const Navbar = React.memo(() => {
   const { cartItems } = useContext(Context);
   const [itemSearch, setItemSearch] = useState('');
   const [isActive, setIsActive] = useState(true);
@@ -23,6 +23,7 @@ const Navbar = () => {
 
     window.location.href = '/auth/login';
   };
+
 
   const handleDisplayMenu = () => {
     if (isActive) {
@@ -37,10 +38,10 @@ const Navbar = () => {
   return (
     <>
       {/* <!-- header -->/ */}
-      <header>
+      <header className='fixed-top'>
         {/* <!-- mobile menu --> */}
         <div className="mobile-menu bg-second" >
-          <Link to='/' className="mb-logo">ATShop</Link>
+          <Link to='/' className="mb-logo">Beauty</Link>
           <span className="mb-menu-toggle" id="mb-menu-toggle" onClick={handleDisplayMenu}>
             <i className='bx bx-menu'></i>
           </span>
@@ -56,10 +57,10 @@ const Navbar = () => {
             <div className="top-header container">
               <ul className="devided">
                 <li>
-                  <a href="#">+840123456789</a>
+                  <a href="#">+84386043213</a>
                 </li>
                 <li>
-                  <a href="#">atshop@mail.com</a>
+                  <a href="#">haoket@mail.com</a>
                 </li>
               </ul>
               <ul className="devided">
@@ -90,7 +91,7 @@ const Navbar = () => {
           {/* <!-- mid header --> */}
           <div className="bg-main">
             <div className="mid-header container">
-              <Link to="/" className="logo" onClick={handleDisplayMenu}>Aura</Link>
+              <Link to="/" className="logo" onClick={handleDisplayMenu}>Beauty</Link>
               <div className="search">
                 <input type="text" placeholder="Tìm kiếm..." onChange={(e) => setItemSearch(e.target.value)} />
                 <a href={`/search/${itemSearch}`} >
@@ -158,6 +159,6 @@ const Navbar = () => {
 
 
   );
-};
+});
 
 export default Navbar;

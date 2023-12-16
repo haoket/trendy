@@ -10,7 +10,9 @@ const UserLayout = () => {
             <div className="user-layout overflow-hidden">
                 <div>
                     <Navbar />
-                    <Outlet />
+                    <div className="pt-[150px]">
+                        <Outlet />
+                    </div>
                     <ChatComponent />
                 </div>
 
