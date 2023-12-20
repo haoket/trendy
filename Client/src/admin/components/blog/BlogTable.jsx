@@ -6,6 +6,58 @@ const Blog = () => {
     const navigate = useNavigate();
     const [data, setData] = useState([]);
 
+    const [keyword, setKeyword] = useState('');
+    const [currentPage, setCurrentPage] = useState(1);
+    const blogsPerPage = 5;
+    const [sortBlog, setSortBlog] = useState('');
+
+
+
+    const handleSortBlogChange = (e) => {
+        setSortBlog(e.target.value);
+        const sortedBlog = [...data].sort((a, b) => {
+            if (e.target.value === 'asc') {
+                return a.Price - b.Price;
+            } else if (e.target.value === 'desc') {
+                return b.Price - a.Price;
+            }
+            return 0; // Nếu giá trị không phải 'asc' hoặc 'desc', trả về 0 để không làm thay đổi thứ tự
+        });
+
+        setData(sortedBlog);
+    };
+
+
+    // Calculate the index of the last product on the current page
+    const indexOfLastBlog = currentPage * blogsPerPage;
+    // Calculate the index of the first product on the current page
+    const indexOfFirstBlog = indexOfLastBlog - blogsPerPage;
+    // Get the current products to display
+    const currentBlog = data.slice(indexOfFirstBlog, indexOfLastBlog);
+
+    const paginate = (pageNumber) => setCurrentPage(pageNumber);
+    const handleSearch = async () => {
+        await fetchBlog();
+
+
+        if (keyword === '') {
+
+            return;
+        } else {
+            const filterBlog = data.filter((item) => {
+                const nameMatch = item.title && item.title.toLowerCase().includes(keyword.toLowerCase());
+                return nameMatch;
+            }
+            );
+            setData(filterBlog);
+            console.log('====================================');
+            console.log(filterBlog);
+            console.log('====================================');
+        }
+
+
+    };
+
     const truncateDescription = (description) => {
         const maxLength = 100; // Độ dài tối đa của mô tả ngắn gọn
         if (description.length > maxLength) {
@@ -43,24 +95,41 @@ const Blog = () => {
                         <form className="mb-3 mb-md-0">
                             <div className="row g-3">
                                 <div className="col-md-6">
-                                    <select className="form-select" >
+                                    <select className="form-select" value={sortBlog} onChange={handleSortBlogChange}>
                                         <option value="">...</option>
-                                        <option value="desc">Tăng dần</option>
-                                        <option value="asc">Giảm dần</option>
+                                        <option value="desc">Tăng</option>
+                                        <option value="asc">Giảm</option>
+
                                     </select>
                                 </div>
-                                <div className="col-md-6">
-                                    <div className="input-group">
+                                <div className="col-md-6  flex">
+                                    <div className="input-group  ">
                                         <input
                                             type="text"
-                                            className="form-control"
+                                            className=" form-control"
                                             placeholder="Tìm kiếm"
-
+                                            value={keyword}
+                                            onChange={(e) => setKeyword(e.target.value)}
                                         />
-                                        <button className="btn btn-outline-light" type="button" >
-                                            <i className="bi bi-search"></i>
+                                    </div>
+                                    <div width="100px">
+                                        {keyword && (
+                                            <button className=" font-bold  p-[3px] rounded absolute right-10 " type="button" onClick={() => {
+                                                setKeyword('');
+                                                fetchBlog();
+                                            }}>
+                                                <i className="bi bi-x"></i>
+                                            </button>
+
+
+                                        )}
+
+                                        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold p-[9px] ml-1 rounded" type="button" onClick={handleSearch}>
+
+                                            <i className="bi bi-search text-sm"></i>
                                         </button>
                                     </div>
+
                                 </div>
                             </div>
                         </form>
@@ -89,7 +158,7 @@ const Blog = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {data.map((item, index) => (
+                    {currentBlog.map((item, index) => (
                         <tr key={index}>
                             <td className="p-2">
                                 <button
@@ -117,6 +186,18 @@ const Blog = () => {
                     ))}
                 </tbody>
             </table>
+
+            <div className="box">
+                <ul className="pagination">
+                    {Array.from({ length: Math.ceil(data.length / blogsPerPage) }, (_, index) => (
+                        <li key={index} className={currentPage === index + 1 ? "active bg-green-500" : ""}>
+                            <a href="#" onClick={() => paginate(index + 1)}>
+                                {index + 1}
+                            </a>
+                        </li>
+                    ))}
+                </ul>
+            </div>
         </div >
     );
 };
